@@ -5,7 +5,7 @@
 
 
 
-create a 
+create a ball that you can move with arrow keys in a few lines of code
 ```js
 const ball = createEntity("ball.png")
 
