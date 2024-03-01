@@ -1,4 +1,4 @@
-const game = {}
+let game = {}
 const SKY_REMOTE = {
 	up:["i","arrowup"],
 	down:["k","arrowdown"],
@@ -107,6 +107,13 @@ const ensureApp = () => {
 	})
 }
 
+const entitySpawned = entity => {
+	if(!game.hasOwnProperty("app")) return false
+	if(!enity.name)entity.name = Date.now()
+ 	const obj = app.stage.getChildByName(entity.name);
+  	return obj !== null && obj !== undefined;
+}
+
 const spawnEntity = (entity,container)=>{
 	console.debug("Spawning entity", entity)
 	if(container && typeof container == "object" && container.hasOwnProperty("container")) {
@@ -123,6 +130,7 @@ const spawnEntity = (entity,container)=>{
 
 const despawnEntity = entity =>{
 	if(entity?.parent) {
+		if(entity.despawn) entity.despawn();
 		entity.parent.removeChild(entity)
 	}
 }
@@ -160,6 +168,8 @@ const createEntity = (url,container) =>{
 
 
 const makeDynamic = (entity={})=> {
+	entity.initialised = false;
+	createEvent(entity,"init")
 	createEvent(entity,"spawn")
 	createEvent(entity,"update")
 	createEvent(entity,"despawn")
@@ -172,7 +182,7 @@ const createGroup = parent => {
 	
 }
 
-const createState = (name,init=()=>{})=>{
+const createState = name =>{
 	game.states = game.states||{};
 	if(game.states.hasOwnProperty(name)) return	
 	console.debug("Creating game state",name)
@@ -246,4 +256,86 @@ const createMenu = (name="menu")=>{
 
 	return menu;
 }
+
+
+
+const destroyGame = () =>{
+	if(game.hasOwnProperty("app"))
+	game.app.destroy(true,true)
+	/*for(const key in game) {
+		delete game[key]
+	}*/
+	game = {}
+}
+
+
+const sleep = ms => {
+  const start = Date.now();
+  while (Date.now() - start < ms) {}
+}
+
+const gameJSON = (gameData,ids=[]) =>{
+	if(!!Object.keys(game).length) {
+		destroyGame();
+		sleep(5000)
+	}
+	const entities= {};
+	//const fn = fnString =>  new Function(fnString);
+	const varSet = (key,value) => `const ${key} = ${value};
+`;
+	const fn = (fnStr,...args) => {
+		console.debug("fn",{fnStr,args})
+		const entityConsts = Object.entries(entities).map(([key,value])=>fnStr.includes(key)?varSet(key,`entities.${key}`):"")
+		const entityConsts2 = ids.map(key=>fnStr.includes(key)?varSet(key,`entities.${key}`):"")
+		const func = new Function("entities",...args,entityConsts.join("")+entityConsts2.join("")+fnStr)
+		return (...args)=>func.call(this,entities,...args)
+	}
+	
+	const fillData = (entity,data={},ignoreKeys=[]) =>{
+		console.debug("filldata",{entity,data,ignoreKeys})
+		if(entity)
+			for( const key in data)
+				switch(key) {
+					case "id":
+						entities[data[key]] = entity;
+						break
+					case "init":
+					case "spawn":
+					case "despawn":
+					case "action":
+						entity[key] = fn(data[key])
+						break;
+					case "update":
+						entity[key] = fn(data[key],"deltatime")
+						break;
+					default:
+						if(!ignoreKeys.includes(key))
+							entity[key] = data[key];
+				}
+		return entity
+	}
+	const createEntity = {
+		sprite: (spriteData,parent) => fillData(createSprite(spriteData.url, parent), spriteData, ["type","action","url"]),
+		text: (textData,parent) =>fillData(createText(textData.text,parent),textData,["type","action","text"]),
+		group: (groupData,parent) => spawnArray(groupData.children,fillData(createGroup(parent),groupData,["type","children"])),
+		state: stateData=>spawnArray(stateData.entities,fillData(createState(stateData.name),stateData,["type","children","name"]))
+	}
+	const spawnArray = (array,parent) =>{
+	console.debug("spawning array ", {array,parent})
+		if(Array.isArray(array)) {
+			for(const entityData of array) {
+				if(entityData.hasOwnProperty("type") && createEntity.hasOwnProperty(entityData.type)) {
+					createEntity[entityData.type](entityData,parent)
+				} else {
+					console.warn(`No such entity type "${entityData.type}"`,entityData)
+				}
+			}
+		}
+		return parent;
+	}
+	spawnArray(gameData)
+	return entities;
+}
+
+
 

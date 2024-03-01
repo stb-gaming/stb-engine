@@ -1,0 +1,13 @@
+{
+	scripts: {
+		build: 'npx @11ty/eleventy',
+		serve: 'npx @11ty/eleventy --serve',
+	},
+	devDependencies: {
+		'@11ty/eleventy': '^2.0.1',
+	},
+	dependencies: {
+		esbuild: '^0.20.1',
+		'pixi.js': '^7.4.0',
+	},
+}
