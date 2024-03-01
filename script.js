@@ -50,7 +50,7 @@ menu.addOption(createText("Bar",null),()=>console.log("bar"));
 menu.addOption(createText("Face",null),()=>console.log("face"));
 
 
-const text = createText("Press space to continue")
+const text = createText("Press select to continue")
 text.y = menu.container.height + 100
 
 menu.state.update = () =>{
