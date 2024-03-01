@@ -10,8 +10,8 @@ create a ball that you can move with arrow keys in a few lines of code
 const ball = createEntity("ball.png")
 
 game.update = dt =>{
-	ball.x += (keyDown("arrowright")-keyDown("arrowleft"))*dt*5
-	ball.y += (keyDown("arrowdown")-keyDown("arrowup"))*dt*5
+	ball.x += getArrowX()*dt*5
+	ball.y += getArrowY()*dt*5
 }
 ```
 

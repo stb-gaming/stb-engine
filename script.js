@@ -19,7 +19,8 @@
 // 
 // // world.tick = dt=>(balls.x+=.3*dt)
 // world.update = dt =>{
-// if(keyDown("w"))console.log("hello")
+// //console.log("h")
+// 
 // 
 // 	const move = dt*2;
 // 	if(keyDown("arrowup")) balls.y-=move;
@@ -34,15 +35,36 @@
 // createMenu()
 // 
 // console.log(game)
-// 
 
 
-const ball = createEntity("ball.png")
 
-game.update = dt =>{
-	ball.x += (keyDown("arrowright")-keyDown("arrowleft"))*dt*5
-	ball.y += (keyDown("arrowdown")-keyDown("arrowup"))*dt*5
+
+
+
+
+const menu = createMenu()
+menu.addOption(createText("Hello",null),()=>console.log("hello"));
+menu.addOption(createText("World",null),()=>console.log("world"));
+menu.addOption(createText("Foo",null),()=>console.log("foo"));
+menu.addOption(createText("Bar",null),()=>console.log("bar"));
+menu.addOption(createText("Face",null),()=>console.log("face"));
+
+
+const text = createText("Press space to continue")
+text.y = menu.container.height + 100
+
+menu.state.update = () =>{
+	if(keyReleased(SKY_REMOTE.select)) {
+		setState("world")
+	}
 }
 
+const world = createState("world");
 
-//const world = createState("world");
+
+const ball = createSprite("ball.png",world)
+
+world.update = dt =>{
+	ball.x += getArrowX()*dt*5
+	ball.y += getArrowY()*dt*5
+}

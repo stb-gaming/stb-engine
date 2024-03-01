@@ -1,17 +1,29 @@
 const game = {}
-
+const SKY_REMOTE = {
+	up:["i","arrowup"],
+	down:["k","arrowdown"],
+	left:["j","arrowleft"],
+	right:['l','arrowright'],
+	select:[' ','enter'],
+	backup:'backspace',
+	red:'q',
+	green:'w',
+	yellow:'e',
+	blue:'r',
+	help:'t',
+}
 
 
 
 const onEvent = (entity={},type="",cb,onListen)=>{
 	console.debug("Registering event listener",type)
-	entity.events = entity.events || new Map();
-	entity.events.set(type, [...(entity.events.get(type) || []), cb]);
+	entity.events = entity.events || {};
+	entity.events[type] =  [...(entity.events[type] || []), cb];
 	if(onListen) onListen(entity,type,cb)
 }
 
 const callEvent = (entity={},type="",...args)=>{
-	const events = entity.events?.get(type) ||[];
+	const events = entity.events?.[type] ||[];
 	events.forEach(cb=>cb(...args));
 }
 const createEvent = (entity={},type="",onListen) => 
@@ -46,19 +58,25 @@ const ensureInput = () => {
     game.input = {};
 };
 
-const keyDown = k =>{
+const keyDown = keys =>{
 	ensureInput();
-	return game.input.value?.[k.toLowerCase()]||false
+	if(!Array.isArray(keys)) keys = [keys]
+	return keys.some(k=>game.input.value?.[k.toLowerCase()]||false)
 }
-const keyPressed = k => {
+const keyPressed = keys => {
 	ensureInput();
-	game.input.events?.keydown?.includes(k.toLowerCase())||false
+	if(!Array.isArray(keys)) keys = [keys]
+	return keys.some(k=>game.input.events?.keydown?.includes(k.toLowerCase())||false)
 }
 
-const keyReleased = k => {
+const keyReleased = keys => {
 	ensureInput()
-	game.input.events?.keyup?.includes(k.toLowerCase())||false
+	if(!Array.isArray(keys)) keys = [keys]
+	return keys.some(k=>game.input.events?.keyup?.includes(k.toLowerCase())||false)
 }
+
+const getArrowX = () => keyDown(SKY_REMOTE.right)-keyDown(SKY_REMOTE.left)
+const getArrowY = () => keyDown(SKY_REMOTE.down)-keyDown(SKY_REMOTE.up)
 
 
 const ensureGameLoop = () => {
@@ -89,16 +107,36 @@ const ensureApp = () => {
 	})
 }
 
+const spawnEntity = (entity,container)=>{
+	console.debug("Spawning entity", entity)
+	if(container && typeof container == "object" && container.hasOwnProperty("container")) {
+		container = container.container
+	}
+	if(container !== null) {
+			ensureApp();
+			const app = game.app;
+			container = container||game.current?.container||app.stage
+			container.addChild(entity);
+	}
+	return entity
+}
+
+const despawnEntity = entity =>{
+	if(entity?.parent) {
+		entity.parent.removeChild(entity)
+	}
+}
+
 const createSprite = (img, container)=> {
 	console.debug("Creating sprite",img)
 	const sprite = PIXI.Sprite.from(img);
-	if(container !== null){
-		ensureApp();
-		const app = game.app;
-		container = container||game.current?.container||app.stage
-		container.addChild(sprite);
-	}
-	return sprite
+	return spawnEntity(sprite,container)
+}
+
+const createText = (text,container) => {
+	console.debug("Creating text",text)
+	const textEntity = new PIXI.Text(text, { fontSize: 30, fill: 'white' })
+	return spawnEntity(textEntity,container)
 }
 
 const trycatch = fn =>{
@@ -116,13 +154,8 @@ const createEntity = (url,container) =>{
 	const entity = error
 				?new PIXI.Text(url, { fontSize: 30, fill: 'white' })
 				:new PIXI.Sprite(texture)
-	if(container !== null){
-		ensureApp();
-		const app = game.app;
-		container = container||game.current?.container||app.stage
-		container.addChild(entity);
-	}
-	return entity
+	
+	return spawnEntity(entity,container)
 }
 
 
@@ -135,26 +168,20 @@ const makeDynamic = (entity={})=> {
 
 const createGroup = parent => {
 	const container = new PIXI.Container();
-	if(parent !== null&&!game.app){
-		ensureApp();
-		const app = game.app;
-		parent = parent||game.current?.container||app.stage
-		parent.addChild(container);
-	}
-	return container
+	return spawnEntity(container,parent)
 	
 }
 
 const createState = (name,init=()=>{})=>{
-	game.states = game.states||new Map();
-	if(game.states.has(name)) return	
+	game.states = game.states||{};
+	if(game.states.hasOwnProperty(name)) return	
 	console.debug("Creating game state",name)
 
 	const state = {
 		container: createGroup(null)
 	};
 	state.container.name =`[STATE CONTAINER] ${name}`
-	game.states?.set(name,state);
+	game.states[name] = state;
 	makeDynamic(state)
 
 	if(!game.current) setState(name)
@@ -166,26 +193,57 @@ const createState = (name,init=()=>{})=>{
 const setState = name =>{
 	console.debug("Setting game state to",name)
 	createState(name)
-	const state = game.states.get(name)
+	const state = game.states[name]
 	game.current?.despawn()
 	game.current = state;
 	if(game.current?.container) {
 		ensureApp();
 		const app = game.app;
 		app.stage.removeChildren();
-		app.stage.addChild(game.current.container)
+		spawnEntity(game.current.container,app.stage)
 	}
 	game.current?.spawn();
 	ensureGameLoop();
 	if(game.update){}
 }
 
+const addMenuOption = (menu, entity, action) => {
+	console.log("Adding menu option",{menu,entity,action})
+	const y = menu.container.height
+	despawnEntity(entity)
+	
+	spawnEntity(entity,menu)
+//	entity.y = menu.endY;
+	//menu.endY += entity.height;
+	entity.y = y;;
+}
+
 //TDOD MENU OPTIONS WITH SPRITES
 const createMenu = (name="menu")=>{
+	console.debug("Creating menu",name)
 	const state = createState(name);
-	const menuContainer = createGroup(state.container);
+	const container = createGroup(state);
 
-	return {
-		state
+	state.update = dt =>{
+		if(keyReleased(SKY_REMOTE.down)) {
+			console.log("down")
+		}
+		if(keyReleased(SKY_REMOTE.up)) {
+			console.log("up");
+		}
+		if(keyReleased(SKY_REMOTE.select)) {
+			console.log("select");
+		}
 	}
+
+	const menu =  {
+		state,
+		container,
+		endY:0,
+		get options() {return container.children },
+		addOption: (entity,action)=>addMenuOption(menu,entity,action)
+	}
+
+	return menu;
 }
+
