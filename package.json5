@@ -1,13 +1,16 @@
 {
 	scripts: {
-		build: 'npx @11ty/eleventy',
-		serve: 'npx @11ty/eleventy --serve',
+		build: 'rm -r _site&&npx @11ty/eleventy',
+		serve: 'rm -r _site&&npx @11ty/eleventy --serve',
 	},
 	devDependencies: {
 		'@11ty/eleventy': '^2.0.1',
 	},
 	dependencies: {
+		'eleventy-sass': '^2.2.4',
 		esbuild: '^0.20.1',
+		'normalize.css': '^8.0.1',
 		'pixi.js': '^7.4.0',
+		sass: '^1.71.1',
 	},
 }

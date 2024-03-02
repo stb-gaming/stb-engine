@@ -1,5 +1,19 @@
-script(src="assets/scripts/pixi.js" type="module")
-script(src="assets/scripts/index.js" type="module")
+doctype html
+head
 
-h1 ok
-img(src="assets/img/ball.png")
+	link(rel="stylesheet" href="editor.css")
+body
+	#editor
+		.menubar
+			button File
+			button View
+			button Tools
+		aside.sidebar
+			h3 things
+		#canvas-container
+			canvas
+			
+
+	script(src="assets/scripts/pixi.js")
+	script(src="assets/scripts/engine.js")
+	script(src="assets/scripts/editor.js")

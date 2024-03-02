@@ -1,20 +1,24 @@
 const esbuild = require("esbuild")
+const sass = require("sass")
+const path = require('path');
+const eleventySass = require("eleventy-sass");
 
 const serve = process.env.ELEVENTY_RUN_MODE === "serve";
 
 const input = "src",
-	inputAssets = "assets/**/*.",
+	filetype = "/**/*.",
+	inputAssets = `assets/${filetype}`,
 	output = "_site",
-	outputAssets = output+"/assets/",
-	outputImg = outputAssets+"img",
-	outputJs = outputAssets+"scripts",
-	outputStyles = outputAssets+"styles";
+  outputAssets = "assets/",
+  outputImg = `${outputAssets}img`,
+  outputJs = `${output}/${outputAssets}scripts`,
+  outputStyles = `${outputAssets}styles`;
 	
 module.exports = eleventyConfig => {
 eleventyConfig.on("eleventy.before",async () =>{
 	await esbuild.build({
 		entryPoints:[`${input}/*.js`],
-		outdir:outputJs,
+		outdir:`${output}/assets/scripts`,
 		format: "esm",
 		bundle: true,
 		splitting: true,
@@ -22,12 +26,30 @@ eleventyConfig.on("eleventy.before",async () =>{
 		sourcemap: true,
 		
 	})
-})
+});
 
+eleventyConfig.addPlugin(eleventySass,{
+    compileOptions: {
+      // permalink: function(contents, inputPath) {
+      //   //return (data) => data.page.filePathStem.replace(/^\/scss\//, "/css/") + ".css";
+      //   return (data) => data.page.filePathStem.replace(/^\/scss\//, "/assets/css/") + ".css";
+      //   
+      // }
+      permalink:(contents, inputPath)=>data=>data.page.filePathStem.replace(/^\/scss\//, "/assets/css/") + ".css"
+    },
+    sass: {
+      style: "compressed",
+      sourceMap: true
+    },
+    // outdir: outputStyles,
+    rev: true
+  });
 
   eleventyConfig.setPugOptions({ debug: true });
- eleventyConfig.addPassthroughCopy({"assets/**/*.png":outputImg});
- 	eleventyConfig.addWatchTarget("src/**/*.js");
+ eleventyConfig.addPassthroughCopy({[`${inputAssets}png`]:outputImg});
+ //eleventyConfig.addPassthroughCopy({[`${input}${filetype}css`]:outputStyles});
+ 	eleventyConfig.addWatchTarget("src/**/*");
+ 	eleventyConfig.addWatchTarget("assets/**/*");
  	
    return {
   	dir:{input,output}
