@@ -23,7 +23,7 @@ applyBackground(state,url)
 //Logic and cotrollers
 applyPlatformerController(entity)
 applyTopDownController(entity)
-scrollBackgroundWith(state,with)
+
 
 //input buttons: red,green,yellow,blue, numbers,select,backup
 buttonDown(button)
