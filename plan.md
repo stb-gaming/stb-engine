@@ -70,11 +70,15 @@ after playing about and doing research, i have deiced that a ESC aproach could b
 
 ## share
 creates code that could be put in a gist, then you give that gist url back to the site to give you a link you cab use to share the game
+this should make it easier for people who dont want to have to setup a whole website.
+there should also be a video on how to create a gist
 ```
 loadGame({
 gists:[],
 ...
 })
 ```
+potential url format for sharing games
+`/stb-engine?gist=user/abc123/rev1234/file.js`
 ## export
 creates code that can then be placed on a website
