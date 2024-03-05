@@ -1,10 +1,24 @@
-# Editor
+# Plan
+
+## philosophies and principles
+* people unable to program should beable to use this to create games
+* [KISS](https://en.m.wikipedia.org/wiki/KISS_principle)  **K**eep **I**t **S**imple **S**tupid
+* minimimise access to game loop ouside of system code
+* everything should have an equivalent json form
+* p5js style funtion names
+* reduce clunkyness as much as possible
+* if someone says "how do i do this" then thats an area that needs improving
+
+
+## basic plan
 * center canvaa
 * modular sidebars
 * dialogues
 * gist plugins https://gist.githubusercontent.com/{USER/GISTID}/raw
 * local storage
 * local storage
+
+
 
 ## public api
 the  function engine should follow a similar philosophy as p5.js, simple funtionctions tgat do a whole lot in tge background.
@@ -52,14 +66,6 @@ exportHtml()
 exportGist()
 ```
 
-## philosophies and principles
-* people unable to program should beable to use this to create games
-* [KISS](https://en.m.wikipedia.org/wiki/KISS_principle)  **K**eep **I**t **S**imple **S**tupid
-* minimimise access to game loop ouside of system code
-* everything should have an equivalent json form
-* p5js style funtion names
-* reduce clunkyness as much as possible
-* if someone says "how do i do this" then that a thing that needs improving
 
 ## sprites and assets
 code can be loaded via gist or userscrips or even js developer console, thats fine
