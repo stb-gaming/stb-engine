@@ -5,15 +5,11 @@ head
 body
 	#editor
 		.menubar
-			button File
-			button View
-			button Tools
+			button(onclick="exportBtn()") Export
 		aside.sidebar
 			h3 things
 		#canvas-container
 			canvas
-			
-
-	script(src="assets/scripts/pixi.js")
-	script(src="assets/scripts/engine.js")
-	script(src="assets/scripts/editor.js")
+	script(type="module" src="assets/scripts/pixi.js")
+	script(type="module" src="assets/scripts/engine.js")
+	script(type="module" src="assets/scripts/editor.js")
