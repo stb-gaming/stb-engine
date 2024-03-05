@@ -83,3 +83,15 @@ potential url format for sharing games
 `/stb-engine?gist=user/abc123/rev1234/file.js`
 ## export
 creates code that can then be placed on a website
+
+## contributions
+people should beable to contribute a number of ways
+
+
+theres the regular way with pull requests
+
+
+coders should able to share code snippets (also have a button to submit them as corr features)
+
+
+non coders should beable to just feature request and send feedback with text
