@@ -117,3 +117,5 @@ events are helpful because we can send a message to everything that wants it
 do we destroy everything when a state closes or something
 
 maps shouldnt be to big so that shouldnt be too much of an issue
+
+anouther thing is, does pixi render things off screen
