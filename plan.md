@@ -1,4 +1,4 @@
-# Edito
+# Editor
 * center canvaa
 * modular sidebars
 * dialogues
@@ -13,15 +13,41 @@ Also i should try and reduce how much beeds to be directly coded into the game l
 
 ### example functions to have
 ```
-//
+//Graphics 
 createSprite(url)
 createGroup()
 createState(name)
 createText(text)
+applyBackground(state,url)
+
+//Logic and cotrollers
+applyPlatformerController(entity)
+applyTopDownController(entity)
+scrollBackgroundWith(state,with)
+
+//input buttons: red,green,yellow,blue, numbers,select,backup
+buttonDown(button)
+buttonPressed(button)
+buttonReleased(button)
+arrowButtonX()
+arrowButtonY()
+
+//physics
+gravity(number)
+applyGravity(entity)
+applyForce(entity,direction,amount)
+
+//menus
+createMenu(type) // directional, colors
+addOption(menu,entity,state/menu,position) //position is x,y position in menu not coordonates
+
+//misc
+createInfoPanel(text,bg) //help
+
 
 //editor exclusive
 loadGist()
-prompt()
+prompt(promptData)
 exportHtml()
 exportGist()
 ```
