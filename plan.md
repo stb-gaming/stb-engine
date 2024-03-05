@@ -8,6 +8,7 @@
 * p5js style funtion names
 * reduce clunkyness as much as possible
 * if someone says "how do i do this" then thats an area that needs improving
+* have things like game loop, event handlers setup only when needed, (if possible) -- e.g. createSprite by its self should setup a whole game and then place the sprite on the screen
 
 
 ## basic plan
