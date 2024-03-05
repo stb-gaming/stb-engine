@@ -52,14 +52,20 @@ exportHtml()
 exportGist()
 ```
 
+## philosophies and principles
+* people unable to program should beable to use this to create games
+* [KISS](https://en.m.wikipedia.org/wiki/KISS_principle)  **K**eep **I**t **S**imple **S**tupid
+* minimimise access to game loop ouside of system code
+* everything should have an equivalent json form
+* p5js style funtion names
+* reduce clunkyness as much as possible
+* if someone says "how do i do this" then that a thing that needs improving
+
 ## sprites and assets
 code can be loaded via gist or userscrips or even js developer console, thats fine
 fine.
 
 its stuff like images that could be interesting, file upload might be hard so we may have to resort to imgur or discord or mahbe gist if that works.
-
-## json
-everything about game should beable to be represented in json format.
 
 ## plugins
 people knowlegeable about code should beable to create code that would add systems and useful logic to the game
