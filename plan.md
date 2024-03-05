@@ -118,4 +118,4 @@ do we destroy everything when a state closes or something
 
 maps shouldnt be to big so that shouldnt be too much of an issue
 
-anouther thing is, does pixi render things off screen
+anouther thing is, does pixi render things off screen -- no there is no built in culling, set rederable to false
