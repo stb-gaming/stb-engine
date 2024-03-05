@@ -52,7 +52,7 @@ exportHtml()
 exportGist()
 ```
 
-## sprites an assets
+## sprites and assets
 code can be loaded via gist or userscrips or even js developer console, thats fine
 fine.
 
