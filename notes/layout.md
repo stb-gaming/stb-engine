@@ -11,6 +11,7 @@
 createEntity()
 createComponent(name)
 addComponent(entity,component)
+getComponent(entity,component)
 createSprite(url)//entity
 createText(text)//entity
 createGroup()//entity
