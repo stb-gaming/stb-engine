@@ -15,6 +15,8 @@ const input = "src",
   outputStyles = `${outputAssets}styles`;
 	
 module.exports = eleventyConfig => {
+ 	eleventyConfig.addWatchTarget("src/**/*");
+ 	eleventyConfig.addWatchTarget("assets/**/*");
 eleventyConfig.on("eleventy.before",async () =>{
 	await esbuild.build({
 		entryPoints:[`${input}/*.js`],
@@ -48,8 +50,6 @@ eleventyConfig.addPlugin(eleventySass,{
   eleventyConfig.setPugOptions({ debug: true });
  eleventyConfig.addPassthroughCopy({[`${inputAssets}png`]:outputImg});
  //eleventyConfig.addPassthroughCopy({[`${input}${filetype}css`]:outputStyles});
- 	eleventyConfig.addWatchTarget("src/**/*");
- 	eleventyConfig.addWatchTarget("assets/**/*");
  	
    return {
   	dir:{input,output}

@@ -1,4 +1,6 @@
+import * as Input from "./engine/input";
+import * as Events from "./engine/events";
+import * as Time from "./engine/time";
 
 
-import * as Engine from './engine/index'
-Object.assign(globalThis,Engine)
+Object.assign(globalThis,Input,Events,Time)

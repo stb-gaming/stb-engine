@@ -1,4 +1,4 @@
-# Plan
+## Plan
 
 ## philosophies and principles
 * people unable to program should beable to use this to create games
@@ -31,7 +31,7 @@ Also i should try and reduce how much beeds to be directly coded into the game l
 //Graphics 
 createSprite(url)
 createGroup()
-createState(name)
+createScene(name)
 createText(text)
 applyBackground(state,url)
 
