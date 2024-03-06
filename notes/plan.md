@@ -27,45 +27,7 @@ the  function engine should follow a similar philosophy as p5.js, simple funtion
 Also i should try and reduce how much beeds to be directly coded into the game loop by the developer outside of system creation.
 
 ### example functions to have
-```
-//Graphics 
-createSprite(url)
-createGroup()
-createScene(name)
-createText(text)
-applyBackground(state,url)
 
-//Logic and cotrollers
-applyPlatformerController(entity)
-applyTopDownController(entity)
-
-
-//input buttons: red,green,yellow,blue, numbers,select,backup
-buttonDown(button)
-buttonPressed(button)
-buttonReleased(button)
-arrowButtonX()
-arrowButtonY()
-
-//physics
-gravity(number)
-applyGravity(entity)
-applyForce(entity,direction,amount)
-
-//menus
-createMenu(type) // directional, colors
-addOption(menu,entity,state/menu,position) //position is x,y position in menu not coordonates
-
-//misc
-createInfoPanel(text,bg) //help
-
-
-//editor exclusive
-loadGist()
-prompt(promptData)
-exportHtml()
-exportGist()
-```
 
 
 ## sprites and assets
