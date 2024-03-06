@@ -7,11 +7,15 @@
 ## engine
 
 ```
-//Graphics 
+//ecs
 createEntity()
+deleteEntity(entity)
 createComponent(name)
 addComponent(entity,component)
 getComponent(entity,component)
+
+//Graphics 
+createCanvas(canvas) //optional
 createSprite(url)//entity
 createText(text)//entity
 createGroup()//entity
@@ -19,7 +23,6 @@ createScene(name)
 addEntity(scene/group,entity)
 
 applyBackground(state,url)
-spawnEntity
 
 //Logic and cotrollers
 applyPlatformerController(entity)
