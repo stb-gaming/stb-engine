@@ -8,6 +8,8 @@
 
 ```
 //Graphics 
+createEntity()
+applyComponent()
 createSprite(url)//entity
 createText(text)//entity
 createGroup()//entity
