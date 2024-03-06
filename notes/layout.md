@@ -21,7 +21,6 @@ createCanvas(canvas) //optional
 createSprite(url)//entity
 createText(text)//entity
 createGroup()//entity
-
 applyBackground(state,url)
 
 //Logic and cotrollers
