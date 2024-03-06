@@ -13,14 +13,14 @@ deleteEntity(entity)
 createComponent(name)
 addComponent(entity,component)
 getComponent(entity,component)
+createScene(name)
+addEntity(scene/group,entity)
 
 //Graphics 
 createCanvas(canvas) //optional
 createSprite(url)//entity
 createText(text)//entity
 createGroup()//entity
-createScene(name)
-addEntity(scene/group,entity)
 
 applyBackground(state,url)
 
