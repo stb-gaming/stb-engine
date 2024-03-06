@@ -50,7 +50,7 @@ function dragStart({global:mouse}) {
 
 function dragMove({global:mouse}) {
 	if(dragging) {
-		console.debug("dragMove",dragging)
+		//console.debug("dragMove",dragging)
 		dragging.parent.toLocal(mouse,null,dragging.position)
 	}
 }
