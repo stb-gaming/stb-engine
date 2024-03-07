@@ -1,7 +1,7 @@
 import {setupDragging} from './editor/drag'
 const getEl = q=>document.querySelector(q);
 
-import {toHTML,htmlTag} from "./editor/html";
+import {toHTML,htmlTag,getElementPosition,setElementPosition} from "./editor/html";
 import {createForm,getFormData} from './editor/form';
 import {getPromptBody,createPrompt,openPrompt,closePrompt,quickTextPrompt,quickFormPrompt} from './editor/prompt';
 
@@ -30,9 +30,6 @@ getEl("#createSprite").addEventListener("click",()=>{
 
 const app = createRenderer();
 setupDragging(app);
-
-
-
 
 
 function createTestPromptBody() {
@@ -69,6 +66,7 @@ const schema = {
 	"":{type:"submit",value:"Done"}
 }
 
+
 const form = createForm(schema)
 
 form.querySelector("[type=submit]").addEventListener("click",()=>{
@@ -94,7 +92,9 @@ Object.assign(globalThis,{
 	closePrompt,
 	getFormData,
 	quickTextPrompt,
-	quickFormPrompt
+	quickFormPrompt,
+	setElementPosition,
+	getElementPosition
 })
 
 

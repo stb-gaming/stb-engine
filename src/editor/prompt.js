@@ -1,4 +1,4 @@
-import {htmlTag,toHTML,spawnElement,despawnElement} from './html.js';
+import {htmlTag,toHTML,spawnElement,despawnElement,makeElementDragable} from './html.js';
 import {createForm,getFormData} from './form';
 
 export function getPromptBody(prompt) {
@@ -21,6 +21,9 @@ export function createPrompt(title,onClose=()=>{}) {
 		closePrompt(prompt)
 		onClose()
 	})
+
+	makeElementDragable(prompt,".prompt-head")
+
 	return prompt
 }
 
