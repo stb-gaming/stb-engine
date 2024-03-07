@@ -45,10 +45,10 @@ export function createForm(schema,onSubmit=()=>{}) {
 	const form = toHTML(formStr);
 	form.schema = schema;
 	form.action = "#"
-	form.onsubmit = () =>{
+	form.addEventListener("submit",() =>{
 		onSubmit(getFormData(form,schema))
 		return false;
-	}
+	});
 	return form;
 }
 
