@@ -5,6 +5,8 @@ import {toHTML,htmlTag} from "./editor/html";
 import {createForm,getFormData} from './editor/form';
 import {getPromptBody,createPrompt,openPrompt,closePrompt,quickTextPrompt,quickFormPrompt} from './editor/prompt';
 
+import "./editor/not-features"
+
 const createSpriteSchema = {
 	url:{
 		label:"Sprite URL",
@@ -94,3 +96,7 @@ Object.assign(globalThis,{
 	quickTextPrompt,
 	quickFormPrompt
 })
+
+
+
+
