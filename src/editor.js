@@ -1,3 +1,4 @@
+import "./editor/console";
 import {setupDragging} from './editor/drag'
 const getEl = q=>document.querySelector(q);
 
@@ -19,16 +20,17 @@ const createSpriteSchema = {
 getEl("#createSprite").addEventListener("click",()=>{
 	//const url = prompt("SpriteURL","assets/img/ball.png")
 
-	quickFormPrompt("Sprite URL",createSpriteSchema,({url})=>{
+	quickFormPrompt("Sprite URL",createSpriteSchema,{onSubmit:({url})=>{
 		let s = createSprite(url)
 		console.log(s)
 		setupDragging(s)
 		globalThis.sprite = s;
-	})
+	}})
 
 })
-
-const app = createRenderer();
+const canvascontainer = document.querySelector(".game")
+const canvas = document.querySelector("canvas")
+const app = createRenderer({view:canvas,resizeTo:canvascontainer});
 setupDragging(app);
 
 
@@ -48,12 +50,13 @@ function createTestPromptBody() {
 		</ul>
 	`)
 }
-const testPrompt = createPrompt("HELLO WORLD")
-const promptBody = getPromptBody(testPrompt)
-promptBody.append(...createTestPromptBody())
+
 
 getEl("#openPrompt").addEventListener("click",()=>{
-openPrompt(testPrompt)
+	const testPrompt = createPrompt("HELLO WORLD")
+	const promptBody = getPromptBody(testPrompt)
+	promptBody.append(...createTestPromptBody())
+	openPrompt(testPrompt)
 })
 
 
@@ -83,6 +86,7 @@ formPromptBody.appendChild(form)
 getEl("#openFormPrompt").addEventListener("click",()=>{
 openPrompt(formPrompt)
 })
+
 
 
 

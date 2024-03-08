@@ -6,8 +6,13 @@ html(lang="en")
 		meta(name="viewport", content="width=device-width, initial-scale=1.0")
 		link(rel="stylesheet" href="editor.css")
 	body
-		button#createSprite Create Sprite
-		button#openPrompt Open Prompt
-		button#openFormPrompt Form Test
+		.menubar
+			button#createSprite Create Sprite
+			button#openPrompt Open Prompt
+			button#openFormPrompt Form Test
+		.sidebar.left
+		.game
+			canvas
+		.sidebar.right
 		script(type="module",src="assets/scripts/engine.js")
 		script(type="module",src="assets/scripts/editor.js")

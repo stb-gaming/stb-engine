@@ -29,8 +29,72 @@ body {
     font-size: 1.2em;
     line-height: 1.5em;
 	position: relative;
+
+    width: 100%;
+
+    display: grid;
+    grid-template-areas: "menu menu menu" "left game right" "status status status";
+    grid-template-rows: min-content auto min-content;
+    grid-template-columns: min-content auto min-content;
 }
 
+.menubar {
+    grid-area: menu;
+  background-color: ButtonFace;
+}
+
+button, .btn, , ::file-selector-button, input:is([type="color"], [type="reset"], [type="button"], [type="submit"]) {
+    border: none;
+    white-space: unset;
+  display: inline-block;
+
+  color: ButtonText;
+  font: -moz-button;
+  white-space: pre;
+  text-align: center;
+  overflow-clip-box: padding-box;
+  appearance: auto;
+  -moz-default-appearance: button;
+  padding-block: 1px;
+  padding-inline: 8px;
+  background-color: ButtonFace;
+  cursor: default;
+  box-sizing: border-box;
+  user-select: none;
+}
+
+body>.game {
+    grid-area: game;
+    width:100%;
+    height: 100%;
+    position: relative;
+}
+
+canvas {
+    position: absolute;
+    top:0;
+    left: 0;
+}
+
+.sidebar {
+    overflow: scroll;
+    &.left {
+        grid-area: left;
+        // background-color: blue;
+    }
+    &.right {
+        grid-area: right;
+        // background-color: red;
+    }
+    .prompt{
+        position: static !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        max-width: unset;
+        translate: unset;
+        width: 300px;
+    }
+}
 
 svg {
     height: 1em;
@@ -47,24 +111,38 @@ h1,h2,h3,h4,h5 {
     left: 50%;
     translate: -50% -50%;
     background-color: #d9b4a2;
-    width: 100%;
-    max-width: 1200px;
+    // max-width: 100%;
+    // max-height: 100%;
     color: black;
     border-radius: 0.5em;
     display: grid;
     display: grid;
     overflow: auto;
-    max-width: max-content;
-    box-shadow: 0 4px 20px 20px rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    box-shadow: 0 4px 4px 4px rgba(0,0,0,.2);
     &>* {
-        padding: .5em 1em;
+        padding: 0em 1em;
     }
 
     .prompt-head {
-        display: grid;
-        grid-template-columns: 1fr 2em;
+        display: flex;
+        align-items: center;
+        user-select: none;
+        -webkit-user-select: none;
+         -ms-user-select: none;
+        grid-template-columns: 1fr 2em 2em;
         line-height: 2em;
         background-color: var(--sky-games-pink);
+        background-color: var(--sky-games-pink);
+        gap: .5em;
+        :not(button) {
+            flex:1;
+        }
+        button {
+            font-size: 1.5em;
+        }
+    }
+    .prompt-body {
+        padding-bottom: .5em;
     }
 }
 
@@ -75,13 +153,13 @@ input {
 		    width: 1.5rem;
 		    vertical-align: top;
 	    }
-	
+
 		font-size:inherit;
 		line-height:inherit;
 		border-radius:.5em;
 		padding: .2em;
 		margin: .1em .5em;
-		
+
 	}
 
 }

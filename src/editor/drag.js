@@ -45,19 +45,16 @@ function dragStart({global:mouse}) {
 	this.alpha = .5;
 	dragging = this;
 	app.stage.on('pointermove',dragMove)
-	console.debug("dragStart",dragging)
 }
 
 function dragMove({global:mouse}) {
 	if(dragging) {
-		//console.debug("dragMove",dragging)
 		dragging.parent.toLocal(mouse,null,dragging.position)
 	}
 }
 
 function dragEnd() {
 	if(dragging) {
-		console.debug("dragEnd",dragging)
 		app.stage.off('pointermove',dragMove)
 		dragging.alpha = 1;
 		loadAnchor(dragging)
@@ -66,8 +63,9 @@ function dragEnd() {
 }
 
 
+
+
 export function setupDragging(entity) {
-	console.debug("setupDragging",entity)
 	if(entity.stage) {
 		app = entity
 		entity = app.stage;

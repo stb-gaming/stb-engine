@@ -1,4 +1,4 @@
-import {defined} from './util.js';
+import {defined,oneTimeEventListener,removeableEventListener} from './util.js';
 
 export function toHTML(htmlText) {
   const template = document.createElement('template');
@@ -26,17 +26,49 @@ export function setElementPosition({style},[x,y]) {
 }
 
 
-export function getElementPosition({getBoundingClientRect}) {
-	const{x,y} = getBoundingClientRect()
-	return [x,y]
+export function getElementPosition(element) {
+	//const {left,top} = element.getBoundingClientRect()
+	const {left,top} = getComputedStyle(element)
+
+	return [parseFloat(left),parseFloat(top)]
 }
+
+function createDragFunction(startPoint, startMouse) {
+  return  newMouse => [
+    startPoint[0] + newMouse[0] - startMouse[0],
+    startPoint[1] + newMouse[1] - startMouse[1]
+  ];
+}
+
 
 
 export function makeElementDragable(element,handleQuery) {
-console.log("dragable",{element,handleQuery});
-const handle = element.querySelector(handleQuery)
-handle.addEventListener("mousedown",console.log)
+	const handle = element.querySelector(handleQuery)
+
+	removeableEventListener(handle,"mousedown",e=>{
+		if(e.target.tagName === "BUTTON") return
+		const parent = element.parentElement;
+		if(parent!==document) {
+			delete element.left;
+			delete element.top;
+		}
+		despawnElement(element)
+		spawnElement(element)
+		const getNewPos = createDragFunction(
+			getElementPosition(element),
+			[e.x,e.y]
+		)
+
+		const removeMove = removeableEventListener(document,"mousemove",e=>{
+			if(typeof getNewPos === "function") {
+				const newPos = getNewPos([e.x,e.y]);
+				setElementPosition(element,newPos);
+			}
+		})
+		oneTimeEventListener(document,"mouseup",removeMove)
+		oneTimeEventListener(document,"mouseleave",removeMove)
+		oneTimeEventListener(document,"blurr",removeMove)
+	})
 
 }
-
 
