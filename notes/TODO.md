@@ -1,0 +1,6 @@
+- [ ] prompt registration
+- [ ] save layout to local storage
+- [ ] systems manager
+- [ ] editor checking const
+- [ ] load system from gist
+- [ ] 
