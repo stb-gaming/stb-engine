@@ -1,5 +1,11 @@
+- [ ] button that creates a sprite from user specified image url
+- [ ] panel spawning
+- [ ] form<=>object conversion
+- [ ] panel closingg
+- [ ] pannel docking and sidebars
 - [ ] prompt registration
-- [ ] save layout to local storage
+- [ ] console log collecting
+- [ ] save panel layout to local storage
 - [ ] systems manager
 - [ ] editor checking const
 - [ ] load system from gist
