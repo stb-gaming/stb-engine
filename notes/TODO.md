@@ -3,4 +3,12 @@
 - [ ] systems manager
 - [ ] editor checking const
 - [ ] load system from gist
-- [ ] 
+- [ ] events system
+- [ ] scene and components system
+- [ ] editor panels for scenes and components
+- [ ] time system
+- [ ] rendering system
+- [ ] input system
+- [ ] menu system
+- [ ] movement systems
+- [ ] physics system
