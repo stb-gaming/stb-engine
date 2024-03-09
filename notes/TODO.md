@@ -1,8 +1,8 @@
-- [ ] button that creates a sprite from user specified image url
-- [ ] panel spawning
-- [ ] form<=>object conversion
-- [ ] panel closingg
-- [ ] pannel docking and sidebars
+- [x] button that creates a sprite from user specified image url
+- [x] panel spawning
+- [x] form<=>object conversion
+- [x] panel closingg
+- [x] pannel docking and sidebars
 - [ ] prompt registration
 - [ ] console log collecting
 - [ ] save panel layout to local storage
