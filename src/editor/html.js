@@ -6,59 +6,7 @@ export const getEl = (parent, query) => (query ? parent : document).querySelecto
 const templates = {}
 
 
-function createFragment(html) {
-	const template = document.createElement("template")
-	template.innerHTML = html;
-	return template.content
-}
-
-function resolveFragment(fragment) {
-	const {firstChild,lastChild,children} = fragment;
-	return firstChild===lastChild ? firstChild : children;
-}
-
-
-/*
-id = string
-base = string
-args = object
-if id not exist =>query = object
-cb fubction
-*/
-
-// createHTML(null, base)
-// createHTML(id)
-// createHTML(id,base)
-
-
-/**
- * id string
- * 			object, funtion bad
- * base     object,function => null
- * args function => null
- *
- * templates has id
- * templates has base
- * create Template
- *
- */
-
 export function createHTML(id, pbase, pargs, pcb, pquery) {
-// params: id base args cb query
-	// get fragments[id] =>  {...queryResults,fragment,cb}
-	//if no fragments[id]  get fragments[base] =>  {...queryResults,fragment,cb}
-	// if no fragments[base]
-		// create a  fresh fragment
-		// if query then make a new object where the values are replaced with fragment.querySelector(value)
-		// cretae object {...queryResults,fragment,paramcb}
-	// if fragments[base] did exist
-		// clone fragment
-		// call base.cb({...q,f},param args
-	// if fragments[id] diddnt exist
-		// create a queryparamas{} where you take param query {} and replace the values with fragmmnet.querySelector(value)
-		// take params and form {fragment,cb,...queryparamas}
-
-	// return fragment.children or firstChild
 	if(typeof id !== "string") throw new Error("ID must be a string")
 
 	// Obtain Base Template
@@ -125,22 +73,6 @@ export function createHTML(id, pbase, pargs, pcb, pquery) {
 	const {firstChild,lastChild,children} = fragment;
 	return firstChild===lastChild?firstChild:children;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-globalThis.createHTML = createHTML
-globalThis.templates = templates
 
 export function htmlTag(tag = "div", attribs = {}, contents = "") {
 	const attribStr = Object.entries(attribs).map(([k, v]) => (defined(v) ? `${k}='${v}'` : "")).join(" ").trim()
