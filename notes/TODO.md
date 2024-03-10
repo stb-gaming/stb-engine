@@ -3,6 +3,7 @@
 - [x] form<=>object conversion
 - [x] panel closingg
 - [x] pannel docking and sidebars
+- [ ] html fragment registration
 - [ ] prompt registration
 - [ ] console log collecting
 - [ ] save panel layout to local storage
