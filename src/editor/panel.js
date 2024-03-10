@@ -3,44 +3,52 @@ import { defined, oneTimeEventListener, removeableEventListener, fn } from './ut
 import { createForm, getFormData } from './form';
 
 
-const basePanel = createHTML(`
-<dialogue class="panel">
+createHTML("panel",`
+<dialog class="panel">
+	<span class="panel-head">
+		<span class="panel-title"></span>
+		<button class="panel-pin">📌</button>
+		<button class="panel-close">❌</button>
+	</span>
+	<span class="panel-body"></span>
+</dialog>
+`,setupPanel,{
+	panel:".panel",
+	title:".panel-title",
+	close:".panel-close",
+	pin:".panel-pin",
+	body:".panel-body"
+})
 
-</dialogue
-`)
 
 
-/*
- * Stages of Panels:
- *
- * * Registration x1
- * * Construction
- * * Spawning
- */
-
-function createPanel(panel) {
-	if (panel && typeof panel === "object" && !Array.isArray(panel)) {
+function setupPanel(fragment,query,panel={}) {
+	if (query && typeof query === "object") {
 		const out = {};
-		if (!Object.hasOwn(pane, "title")) return;
-		let titleBarContent = htmlTag("span", {}, panel.title);
-		if (!Object.hasOwn(panel, "pinnable") || panel.pinnable) {
-			titleBarContent += htmlTag("button", { class: "pin-prompt" }, "📌")
+
+		console.debug(query)
+		if (!Object.hasOwn(panel, "title")) return;
+			query.title.innerText = panel.title
+
+		if (Object.hasOwn(panel, "pinnable") && !panel.pinnable) {
+			query.pin.remove();
 		}
-		if (!Object.hasOwn(panel, "closeable") || panel.closeable) {
-			titleBarContent += htmlTag("button", { class: "close-prompt" }, "❌")
+		if (Object.hasOwn(panel, "closeable") && !panel.closeable) {
+			query.close.remove();
+		} else {
+			query.close.addEventListener("click",()=>{
+				query.panel.close();
+			})
 		}
-		const panelTitlebar = htmlTag("span", { class: "prompt-head" }, titleBarContent);
-		const panelBody = htmlTag("span", { class: "prompt-body" })
-
-		out.element = createHTML(htmlTag("div", { class: "prompt" }, panelTitlebar + panelBody));
-		out.body = out.element.querySelector(".prompt-body")
 
 
-		makeElementDragable(out.element, "")
+		makeElementDragable(query.panel, ".panel-head")
 
 	}
 	return panel;
 }
+
+
 
 export function panel(panel) {
 	// Registration

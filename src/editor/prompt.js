@@ -16,7 +16,7 @@ function dockPrompt(prompt, side) {
 }
 
 export function createPrompt(title, options = {}) {
-	const prompt = createHTML(htmlTag("div", { class: "prompt" },
+	const prompt = createHTML(htmlTag("dialog", { class: "prompt" },
 		htmlTag("span", { class: "prompt-head" },
 			htmlTag("span", {}, title) +
 			(options.nopin ? "" : htmlTag("button", { class: "pin-prompt" }, "📌")) +

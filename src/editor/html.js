@@ -21,7 +21,6 @@ export function createHTML(id, pbase, pargs, pcb, pquery) {
 		fragment = baseTemplate.fragment.cloneNode(true);
 		console.debug(`Created Derivation of ${base}`,baseTemplate.fragment,fragment)
 
-		/// TODO: CALL baseTemplate.cb()
 		if(typeof baseTemplate.cb === "function") {
 			const query = {};
 			if(baseTemplate.query && typeof baseTemplate.query === "object") {
@@ -29,6 +28,7 @@ export function createHTML(id, pbase, pargs, pcb, pquery) {
 					if(!Object.hasOwn(templates[id]))query[k] = fragment.querySelector(baseTemplate.query[k])
 				}
 			}
+			const args = [pbase,pargs].find(args=>typeof args==="object")
 			baseTemplate.cb(fragment,query,args)
 		}
 
@@ -47,7 +47,7 @@ export function createHTML(id, pbase, pargs, pcb, pquery) {
 	}
 	//console.debug("fragment",fragment)
 	// store Derivied template
-	const cb = [pbase,pargs,pcb].find(cb=>typeof cb==="function")
+	const cb = [pargs,pcb].find(cb=>typeof cb==="function")
 	//console.debug("cb",cb)
 	if(id!== base) {
 		//obtain queries
@@ -70,9 +70,11 @@ export function createHTML(id, pbase, pargs, pcb, pquery) {
 	}
 
 	//console.debug("Returning constructed fragment",fragment)
-	const {firstChild,lastChild,children} = fragment;
-	return firstChild===lastChild?firstChild:children;
+	const {firstElementChild,lastElementChild,children} = fragment;
+	return firstElementChild === lastElementChild ? firstElementChild : children;
 }
+
+globalThis.createHTML = createHTML
 
 export function htmlTag(tag = "div", attribs = {}, contents = "") {
 	const attribStr = Object.entries(attribs).map(([k, v]) => (defined(v) ? `${k}='${v}'` : "")).join(" ").trim()
@@ -81,6 +83,7 @@ export function htmlTag(tag = "div", attribs = {}, contents = "") {
 
 export const spawnElement = (element, parent = document.body) => parent.appendChild(element)
 export const despawnElement = element => element.remove();
+
 
 export function setElementPosition({ style }, [x, y]) {
 	style.position = "absolute";
