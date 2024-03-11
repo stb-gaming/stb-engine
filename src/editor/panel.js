@@ -1,7 +1,9 @@
-import { htmlTag, createHTML, spawnElement, despawnElement, makeElementDragable } from './html.js';
+import { htmlTag, createHTML, spawnElement, despawnElement, makeElementDragable,setElementPosition } from './html.js';
 import { defined, oneTimeEventListener, removeableEventListener, fn } from './util.js';
 import { createForm, getFormData } from './form';
 
+
+const panels = {};
 
 createHTML("panel",`
 <dialog class="panel">
@@ -23,42 +25,72 @@ createHTML("panel",`
 
 
 function setupPanel(fragment,query,panel={}) {
-	if (query && typeof query === "object") {
-		const out = {};
+	const out = {};
+	console.debug("Setup Panel",{fragment,query,panel})
+	if (!Object.hasOwn(panel, "title")) return;
+		query.title.innerText = panel.title ?? query.title.innerText
 
-		console.debug(query)
-		if (!Object.hasOwn(panel, "title")) return;
-			query.title.innerText = panel.title
-
-		if (Object.hasOwn(panel, "pinnable") && !panel.pinnable) {
-			query.pin.remove();
-		}
-		if (Object.hasOwn(panel, "closeable") && !panel.closeable) {
-			query.close.remove();
-		} else {
-			query.close.addEventListener("click",()=>{
-				query.panel.close();
-			})
-		}
-
-
-		makeElementDragable(query.panel, ".panel-head")
-
+	if (Object.hasOwn(panel, "pinnable") && !panel.pinnable) {
+		query.pin.remove();
 	}
+	if (Object.hasOwn(panel, "closeable") && !panel.closeable) {
+		query.close.remove();
+	} else {
+		query.close.addEventListener("click",()=>{
+			query.panel.close();
+		})
+	}
+
+
+	makeElementDragable(query.panel, ".panel-head")
+}
+
+
+
+export function createPanel(panel) {
+	let premade = Object.hasOwn(panels, panel);
+	// Registration
+	if (premade) {
+		panel = panels[panel];
+		if(!panel.single) {
+			premade = false;
+			panel = {
+				base:panel.id
+			}
+		}
+	} else if (Object.hasOwn(panel, "id") && !Object.hasOwn(panels, panel.id)) {
+		panels[panel.id] = panel;
+		console.debug("Registered new Panel")
+	}
+	if(typeof panel !== "object") return
+	console.debug(panel)
+	panel.single ??=!panel.id;
+	const toConstruct = panel.single ^ premade;
+	console.log({premade,toConstruct})
+
+	// Construction
+	if(toConstruct) {
+		panel.element ??= createHTML(panel.id?"panel-"+panel.id:"panel",panel.base?"panel-"+panel.base:"panel",panel)
+	}
+	if(Object.hasOwn(panel,"element")) {
+		panel.open ??= panel.element.show.bind(panel.element)
+		panel.close ??= panel.element.close.bind(panel.element)
+	}
+
+	// Spawn
+	if(!Object.hasOwn(panel.element||{parentElement:true}, "parentElement")) spawnElement(panel.element)
+	if(toConstruct && panel.open) {
+		panel.open();
+		const {width,height} = panel.element.getBoundingClientRect()
+		setElementPosition(panel.element,[window.innerWidth/2-width/2,window.innerHeight/2-height/2])
+	}
+
 	return panel;
 }
 
+createPanel({
+	id:"fear",
+    title:"Fear me"
+})
 
-
-export function panel(panel) {
-	// Registration
-	if (Object.hasOwn(panels, panel)) {
-		panel = panels[panel];
-	} else if (Object.hasOwn(panel, "id") && !Object.hasOwn(panels, panel.id)) {
-		panels[id] = panel;
-	}
-
-	// Construction
-
-	// Spawn
-}
+globalThis.createPanel = createPanel

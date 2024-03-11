@@ -25,7 +25,7 @@ export function createPrompt(title, options = {}) {
 	));
 	const closeBtn = prompt.querySelector(".close-prompt");
 	if (closeBtn)
-		oneTimeEventListener(closeBtn, "click", () => {
+		closeBtn.addEventListener("click", () => {
 			closePrompt(prompt)
 			if (options.onClose) options.onClose()
 		})

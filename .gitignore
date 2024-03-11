@@ -1,4 +1,5 @@
 node_modules
 _site
 package*.json
-*.kate-swp
+**/.**.kate-swp
+**/*.kdev4

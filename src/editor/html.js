@@ -10,11 +10,8 @@ export function createHTML(id, pbase, pargs, pcb, pquery) {
 	if(typeof id !== "string") throw new Error("ID must be a string")
 
 	// Obtain Base Template
-	const idStrings = [id,pbase].filter(base=>typeof base === "string")
-	const base = idStrings.find((base,i)=>(Object.hasOwn(templates,base)||i+1==idStrings.length))
-	//console.debug("base",base)
+	const base = Object.hasOwn(templates,id)?id:pbase??id;
 	const baseTemplate = templates[base];
-	//console.debug("baseTemplate",baseTemplate);
 	// Create Derivied
 	let fragment;
 	if(baseTemplate && typeof baseTemplate === "object" && baseTemplate.fragment instanceof DocumentFragment ) {
@@ -25,25 +22,24 @@ export function createHTML(id, pbase, pargs, pcb, pquery) {
 			const query = {};
 			if(baseTemplate.query && typeof baseTemplate.query === "object") {
 				for (const k in baseTemplate.query) {
-					if(!Object.hasOwn(templates[id]))query[k] = fragment.querySelector(baseTemplate.query[k])
+					if(!Object.hasOwn(templates[id]))
+						query[k] = fragment.querySelector(baseTemplate.query[k])
 				}
 			}
 			const args = [pbase,pargs].find(args=>typeof args==="object")
 			baseTemplate.cb(fragment,query,args)
 		}
-
-
 	} else {
 		// Create fagment from HTML string
 		const template = document.createElement("template")
-		template.innerHTML = base
+		template.innerHTML = base?.trim();
 		fragment = template.content;
 		console.debug("Converted html string to a <template>",template);
-		if(base==id) {
-			console.debug("❌ Created a html fragment without the intention of using it")
-		} else {
-			console.debug("✅ Created a reusable html fragment")
-		}
+		console.debug(
+			base === id
+				? "❌ Created an HTML fragment without the intention of reusing it"
+				: "✅ Created a reusable HTML fragment"
+		);
 	}
 	//console.debug("fragment",fragment)
 	// store Derivied template
@@ -51,10 +47,7 @@ export function createHTML(id, pbase, pargs, pcb, pquery) {
 	//console.debug("cb",cb)
 	if(id!== base) {
 		//obtain queries
-		const query = (cb
-			?[pcb,pquery]
-			:[pargs,pcb,pquery]
-		).find(cb=>typeof cb==="object")
+		const query = (cb?[pcb,pquery]:[pargs,pcb,pquery]).find(cb=>typeof cb==="object")
 		//console.debug("query",query)
 		//Store template
 		templates[id] = {
@@ -77,7 +70,9 @@ export function createHTML(id, pbase, pargs, pcb, pquery) {
 globalThis.createHTML = createHTML
 
 export function htmlTag(tag = "div", attribs = {}, contents = "") {
-	const attribStr = Object.entries(attribs).map(([k, v]) => (defined(v) ? `${k}='${v}'` : "")).join(" ").trim()
+	const attribStr = Object.entries(attribs)
+				.map(([k, v]) => (defined(v) ? `${k}='${v}'` : ""))
+				.join(" ").trim()
 	return `<${tag} ${attribStr}>${contents}</${tag}>`
 }
 
@@ -85,30 +80,25 @@ export const spawnElement = (element, parent = document.body) => parent.appendCh
 export const despawnElement = element => element.remove();
 
 
-export function setElementPosition({ style }, [x, y]) {
+export const setElementPosition = ({ style }, [x, y]) => {
 	style.position = "absolute";
 	style.left = x + "px";
 	style.top = y + "px";
-}
+};
 
+export const getElementPosition = element => {
+	const { left, top } = getComputedStyle(element);
+	return [parseFloat(left), parseFloat(top)];
+};
 
-export function getElementPosition(element) {
-	//const {left,top} = element.getBoundingClientRect()
-	const { left, top } = getComputedStyle(element)
-
-	return [parseFloat(left), parseFloat(top)]
-}
-
-function createDragFunction(startPoint, startMouse) {
-	return newMouse => [
-		startPoint[0] + newMouse[0] - startMouse[0],
-		startPoint[1] + newMouse[1] - startMouse[1]
-	];
-}
+const createDragFunction = (startPoint, startMouse) => (newMouse) => [
+	startPoint[0] + newMouse[0] - startMouse[0],
+	startPoint[1] + newMouse[1] - startMouse[1],
+];
 
 
 
-export function makeElementDragable(element, handleQuery) {
+export const makeElementDragable = (element, handleQuery) => {
 	const handle = element.querySelector(handleQuery)
 
 	removeableEventListener(handle, "mousedown", e => {
@@ -120,10 +110,8 @@ export function makeElementDragable(element, handleQuery) {
 		}
 		despawnElement(element)
 		spawnElement(element)
-		const getNewPos = createDragFunction(
-			getElementPosition(element),
-			[e.x, e.y]
-		)
+
+		const getNewPos = createDragFunction(getElementPosition(element), [e.x, e.y]);
 
 		const removeMove = removeableEventListener(document, "mousemove", e => {
 			if (typeof getNewPos === "function") {
@@ -133,7 +121,7 @@ export function makeElementDragable(element, handleQuery) {
 		})
 		oneTimeEventListener(document, "mouseup", removeMove)
 		oneTimeEventListener(document, "mouseleave", removeMove)
-		oneTimeEventListener(document, "blurr", removeMove)
+		oneTimeEventListener(document, "blur", removeMove)
 	})
 
 }
