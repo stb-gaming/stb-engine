@@ -46,14 +46,15 @@ function setupPanel(fragment,query,panel={}) {
 	if(Object.hasOwn(panel, "body")) {
 		fn(panel.body)(query.body)
 	}else if(Object.hasOwn(panel, "form")) {
-		const form = createForm(panel.form)
+		const form = createForm(panel.form,true)
 		query.body.appendChild(form)
-		form.method = "dialog"
+
+		query.form = form;
 	}
 	if(Object.hasOwn(panel, "onclose")) {
 		panel.onclose = fn(panel.onclose)
 		query.panel.addEventListener("close",()=>{
-			panel.onclose(getFormData(panel.form))
+			panel.onclose(getFormData(query.form,panel.form))
 		})
 	}
 

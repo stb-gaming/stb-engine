@@ -51,15 +51,20 @@ export function createForm(schema, onSubmit = () => { }) {
 	const fieldString = Object.entries(schema).map(([key, options]) =>
 		createField(key, typeof options === "object" ? options : { value: options })
 	).join("")
-	const formStr = htmlTag("form", { onsubmit: "return false;" }, fieldString);
+	const formStr = htmlTag("form",{}, fieldString);
 
 	const form = createHTML(formStr);
 	form.schema = schema;
 	form.action = "#"
-	form.addEventListener("submit", () => {
-		onSubmit(getFormData(form, schema))
-		return false;
-	});
+	if(typeof onSubmit === "function") {
+		form.addEventListener("submit", () => {
+			onSubmit(getFormData(form, schema))
+			return false;
+		});
+	}
+	if(onSubmit === true) {
+		form.method = "dialog"
+	}
 	return form;
 }
 

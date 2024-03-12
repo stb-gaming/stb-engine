@@ -9,12 +9,6 @@ import {createPanel}from './editor/panel';
 import "./editor/not-features";
 
 
-const createPrompt = ()=> {
-	console.warn("coming soon")
-}
-const quickFormPrompt = createPrompt,
-openPrompt = createPrompt,
-close = createPrompt
 
 const createSpriteSchema = {
 	url: {
@@ -74,7 +68,7 @@ Object.assign(globalThis, {
 	getFormData,
 	setElementPosition,
 	getElementPosition,
-	createPrompt,
+	createPanel,
 })
 
 
