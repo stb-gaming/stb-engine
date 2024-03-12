@@ -4,10 +4,8 @@ const jsConsole = (()=>{
 	return {warn,error,info,debug}
 })()
 
-
-import {quickTextPrompt,quickFormPrompt} from './prompt';
-
 console.error = (...err) => {
 jsConsole.error(...err)
-	quickTextPrompt("Error",err.join (" "))
+	// TODO
+	//quickTextPrompt("Error",err.join (" "))
 }

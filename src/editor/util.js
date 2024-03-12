@@ -15,7 +15,7 @@ export function oneTimeEventListener(element, type, cb) {
 		cb(e)
 	})
 }
-
+export const arr = arr=>arr.length===1?arr[0]:arr
 
 /**
  * @param {String} fn unction string

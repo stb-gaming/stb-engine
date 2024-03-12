@@ -3,6 +3,17 @@ import { htmlTag, createHTML } from './html.js';
 
 const createOption = (value, label = value) => htmlTag("option", { value }, label)
 
+createHTML({id:"form",base:`<form action="#" onsubmit="return false;"></form>`,cb:setupForm,query:{form:"form"}})
+
+function setupForm(fragment,{form},schema) {
+
+	for(const key in scheme) {
+		form.appendChild(createField(key,schema[key]))
+	}
+
+}
+
+
 export function createField(name, {
 	options,
 	example,
@@ -24,7 +35,7 @@ export function createField(name, {
 			? options.map(value => createOption(value)).join("")
 			: Object.entries.map(([key, label]) => createOption(key, label)).join("")
 
-		input = htmlTag("select", { id, name, value, placeholder }, optionsStr)
+		input = createHtml(htmlTag("select", { id, name, value, placeholder }, optionsStr))
 	} else {
 		input = htmlTag("input", { id, name, type, placeholder, value })
 	}

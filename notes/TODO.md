@@ -4,14 +4,16 @@
 - [x] panel closingg
 - [x] pannel docking and sidebars
 - [x] html fragment registration
-- [ ] prompt registration
-- [ ] console log collecting
-- [ ] save panel layout to local storage
+- [x] panel registration
+- [x] global variable for checking if in editor
 - [ ] systems manager
-- [ ] editor checking const
 - [ ] load system from gist
 - [ ] events system
 - [ ] scene and components system
+- [ ] panel docking and layouts
+- [ ] save panel layout to local storage
+- [ ] error log
+- [ ] quick question panel
 - [ ] editor panels for scenes and components
 - [ ] time system
 - [ ] blockly system?

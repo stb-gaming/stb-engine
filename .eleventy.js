@@ -26,7 +26,7 @@ eleventyConfig.on("eleventy.before",async () =>{
 		splitting: true,
 		minify: !serve,
 		sourcemap: true,
-		
+
 	})
 });
 
@@ -35,7 +35,7 @@ eleventyConfig.addPlugin(eleventySass,{
       // permalink: function(contents, inputPath) {
       //   //return (data) => data.page.filePathStem.replace(/^\/scss\//, "/css/") + ".css";
       //   return (data) => data.page.filePathStem.replace(/^\/scss\//, "/assets/css/") + ".css";
-      //   
+      //
       // }
       permalink:(contents, inputPath)=>data=>data.page.filePathStem.replace(/^\/scss\//, "/assets/css/") + ".css"
     },
@@ -44,7 +44,7 @@ eleventyConfig.addPlugin(eleventySass,{
       sourceMap: true
     },
     // outdir: outputStyles,
-    rev: true
+    //rev: true
   });
 
   eleventyConfig.setPugOptions({ debug: true });

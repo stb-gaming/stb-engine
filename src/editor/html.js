@@ -1,70 +1,55 @@
-import { defined, oneTimeEventListener, removeableEventListener } from './util.js';
+import { defined, oneTimeEventListener, removeableEventListener,arr,fn } from './util.js';
 
 
 export const getEl = (parent, query) => (query ? parent : document).querySelector(query || parent);
 
 const templates = {}
+globalThis.templates = templates;
 
+export function createHTML(html) {
+	if(typeof html === "string") html={base:html}
+	html.cb &&=fn(html.cb)
 
-export function createHTML(id, pbase, pargs, pcb, pquery) {
-	if(typeof id !== "string") throw new Error("ID must be a string")
-
-	// Obtain Base Template
-	const base = Object.hasOwn(templates,id)?id:pbase??id;
-	const baseTemplate = templates[base];
+	const base = templates[html.base];
 	// Create Derivied
-	let fragment;
-	if(baseTemplate && typeof baseTemplate === "object" && baseTemplate.fragment instanceof DocumentFragment ) {
-		fragment = baseTemplate.fragment.cloneNode(true);
-		console.debug(`Created Derivation of ${base}`,baseTemplate.fragment,fragment)
+	if(base?.fragment instanceof DocumentFragment ) {
+		html.fragment = base.fragment.cloneNode(true);
+		console.debug(`Created Derivation of ${html.base}`,base.fragment,html.fragment)
 
-		if(typeof baseTemplate.cb === "function") {
-			const query = {};
-			if(baseTemplate.query && typeof baseTemplate.query === "object") {
-				for (const k in baseTemplate.query) {
-					if(!Object.hasOwn(templates[id]))
-						query[k] = fragment.querySelector(baseTemplate.query[k])
-				}
+		if(typeof base.cb === "function") {
+			for (const k in base.query||{}) {
+				html.elements ??= {};
+				html.elements[k] ??= html.fragment.querySelector(base.query[k])
 			}
-			const args = [pbase,pargs].find(args=>typeof args==="object")
-			baseTemplate.cb(fragment,query,args)
+			base.cb(html.fragment,html.elements,html.args)
 		}
 	} else {
 		// Create fagment from HTML string
 		const template = document.createElement("template")
-		template.innerHTML = base?.trim();
-		fragment = template.content;
-		console.debug("Converted html string to a <template>",template);
+		template.innerHTML = html?.base?.trim();
+		html.fragment = template.content;
 		console.debug(
-			base === id
-				? "❌ Created an HTML fragment without the intention of reusing it"
-				: "✅ Created a reusable HTML fragment"
+			defined(html.id)
+				? "✅ Created a reusable HTML fragment"
+				: "❌ Created an HTML fragment without the intention of reusing it",html
 		);
 	}
-	//console.debug("fragment",fragment)
 	// store Derivied template
-	const cb = [pargs,pcb].find(cb=>typeof cb==="function")
-	//console.debug("cb",cb)
-	if(id!== base) {
-		//obtain queries
-		const query = (cb?[pcb,pquery]:[pargs,pcb,pquery]).find(cb=>typeof cb==="object")
-		//console.debug("query",query)
+	if(html.id) {
 		//Store template
-		templates[id] = {
-			fragment,
-			cb,
-			query
+		templates[html.id] ??= html;
+		console.debug(`Registered new HTML Fragment '${html.id}':`,templates[html.id])
+	} else if(html.cb) {
+		if(typeof html.cb === "function") {
+			for (const k in html.query||{}) {
+				html.elements ??= {};
+				html.elements[k] ??= html.fragment.querySelector(html.query[k])
+			}
+			html.cb(html.fragment,html.elements,html.args)
 		}
-
-		fragment = templates[id].fragment.cloneNode(true);
-		console.debug(`Registered new HTML Fragment '${id}':`,templates[id])
-	} else if(cb) {
-		console.warn("An id is required for a clone callback to be useful")
 	}
 
-	//console.debug("Returning constructed fragment",fragment)
-	const {firstElementChild,lastElementChild,children} = fragment;
-	return firstElementChild === lastElementChild ? firstElementChild : children;
+	return arr(html.fragment.children)
 }
 
 globalThis.createHTML = createHTML
