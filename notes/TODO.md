@@ -1,26 +1,5 @@
-> https://github.com/orgs/stb-gaming/projects/13
+## Progress Percent %
+> https://github.com/stb-gaming/stb-engine/milestones
 
-- [x] button that creates a sprite from user specified image url
-- [x] panel spawning
-- [x] form<=>object conversion
-- [x] panel closingg
-- [x] pannel docking and sidebars
-- [x] html fragment registration
-- [x] panel registration
-- [x] global variable for checking if in editor
-- [ ] systems manager
-- [ ] load system from gist
-- [ ] events system
-- [ ] scene and components system
-- [ ] panel docking and layouts
-- [ ] save panel layout to local storage
-- [ ] error log
-- [ ] quick question panel
-- [ ] editor panels for scenes and components
-- [ ] time system
-- [ ] blockly system?
-- [ ] rendering system
-- [ ] input system
-- [ ] menu system
-- [ ] movement systems
-- [ ] physics system
+## Live Progress Status
+> https://github.com/orgs/stb-gaming/projects/13

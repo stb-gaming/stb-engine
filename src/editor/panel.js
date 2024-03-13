@@ -89,16 +89,21 @@ export function createPanel(panel) {
 
 		panel.element ??= createHTML({id:panel.id?"panel-"+panel.id:null,base:panel.base?"panel-"+panel.base:"panel",args:panel})
 	if(Object.hasOwn(panel,"element")) {
-		panel.open ??= panel.element["show"+(panel.prompt?"Modal":"")].bind(panel.element)
+		panel.open ??= ()=>{
+			panel.element["show"+(panel.prompt?"Modal":"")].call(panel.element)
+			const {width,height} = panel.element.getBoundingClientRect()
+			setElementPosition(panel.element,[window.innerWidth/2-width/2,window.innerHeight/2-height/2])
+			if(typeof panel.onopen === "function") {
+				panel.onopen()
+			}
+		}
 		panel.close ??= panel.element.close.bind(panel.element)
 	}
 
 	// Spawn
 	if(panel.single&& panel.element) spawnElement(panel.element)
-	if(panel.open) {
+	if(panel.open&&!panel.dontopen) {
 		panel.open();
-		const {width,height} = panel.element.getBoundingClientRect()
-		setElementPosition(panel.element,[window.innerWidth/2-width/2,window.innerHeight/2-height/2])
 	}
 
 

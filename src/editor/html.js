@@ -6,6 +6,16 @@ export const getEl = (parent, query) => (query ? parent : document).querySelecto
 const templates = {}
 globalThis.templates = templates;
 
+/**
+ * Creates HTML elements based on the provided input.
+ * @param {string|Object} html - The HTML string or an object containing properties.
+ * @param {string} [html.base] - The base HTML string to create elements from.
+ * @param {string} [html.id] - Optional ID for storing the created template.
+ * @param {Function} [html.cb] - Callback function to manipulate the created HTML elements.
+ * @param {Object.<string, string>} [html.query] - Query selectors for selecting specific elements within the created HTML.
+ * @param {Object.<string, any>} [html.args] - Additional arguments to be passed to the callback function.
+ * @returns {Element[]|Element} An array of HTML elements created from the input.
+ */
 export function createHTML(html) {
 	if(typeof html === "string") html={base:html}
 	html.cb &&=fn(html.cb)

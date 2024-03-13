@@ -3,12 +3,19 @@
     --sky-games-pink: hsl(var(--sky-games-pink-hue), 100%, 47%);
     --sky-games-pink-dark: hsl(var(--sky-games-pink-hue), 77%, 56%);
     --darken: rgba(.5, .5, .5, .2);
+    --darken-more: rgba(.5, .5, .5, .5);
     --trans: rgba(0, 0, 0, 0);
        
         --background-color: hsla(var(--sky-games-pink-hue), 20%, 18%, 0.85);;
         --panel-color: hsla(var(--sky-games-pink-hue), 20%, 18%, 0.85);
         --panel-header-color: var(--panel-header-color-dark);
         --text-color:  #f9f9f9
+}
+
+:link,button, ::file-selector-button, input:is([type="color"]), input:is([type="reset"]), input:is([type="button"]), input:is([type="submit"]), a.btn{
+    &:hover {
+    outline: -webkit-focus-ring-color auto 1px;
+    }
 }
 
 
@@ -43,7 +50,7 @@ body {
   background-color: ButtonFace;
 }
 
-button, .btn, , ::file-selector-button, input:is([type="color"], [type="reset"], [type="button"], [type="submit"]) {
+button, .btn, , ::file-selector-button, input:is([type="color"]), input:is([type="reset"]), input:is([type="button"]), input:is([type="submit"]) {
     border: none;
     white-space: unset;
   display: inline-block;
@@ -57,10 +64,15 @@ button, .btn, , ::file-selector-button, input:is([type="color"], [type="reset"],
   -moz-default-appearance: button;
   padding-block: 1px;
   padding-inline: 8px;
-  background-color: ButtonFace;
-  cursor: default;
+  cursor: pointer;
   box-sizing: border-box;
   user-select: none;
+  &:hover {
+    background-color: var(--darken);
+}
+  &:active {
+    background-color: var(--darken-more);
+}
 }
 
 body>.game {
@@ -119,10 +131,12 @@ h1,h2,h3,h4,h5 {
     overflow: auto;
     box-shadow: 0 4px 4px 4px rgba(0,0,0,.2);
     margin: 0;
+    grid-auto-rows: 41px auto;
 
     width: min-content;
   height: min-content;
   min-width: 400px;
+  min-height: 225px;
 
 
     &[open] {

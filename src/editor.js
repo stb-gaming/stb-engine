@@ -5,8 +5,9 @@ import { setupDragging } from './editor/drag'
 
 import { getEl, createHTML, htmlTag, getElementPosition, setElementPosition } from "./editor/html";
 import { createForm, getFormData } from './editor/form';
-import {createPanel}from './editor/panel';
+import {createPanel} from './editor/panel';
 import "./editor/not-features";
+import "./editor/systems.js";
 
 
 
@@ -42,7 +43,6 @@ let panel = createPanel({
 	title: "Big Changes are coming",
 	prompt: true,
 	pinnable: false,
-	closeable: false,
 	moveable: false,
 	body:body=>{
 		body.appendChild(createHTML(`
