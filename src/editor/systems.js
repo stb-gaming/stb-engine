@@ -78,7 +78,7 @@ const panel = createPanel({
 			body.appendChild(systemsManager)
 		},
 		onopen:()=>{
-			if(!bodyElement.dataset.current){
+			if(!bodyElement.dataset.current && listElement.firstElementChild){
 				selectSystem(listElement.firstElementChild.dataset.id)
 			}
 		}
@@ -101,6 +101,7 @@ export function createSystem(system) {
 	system.remove = ()=>{
 		system.tab.remove();
 	}
+	listElement.appendChild(system.tab)
 }
 
 
