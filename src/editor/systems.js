@@ -107,7 +107,7 @@ export function createSystem(system) {
 
 createSystem({id:"create-system",title:"Add System",summary:"Create or import a game system",settings:{
 	base:`<p>
-	This area, is still being made, check <a href="https://github.com/stb-gaming/stb-engine/wiki/Systems" >here</a> for more info.
+	This area, is still being made, check <a href="https://github.com/stb-gaming/stb-engine/wiki/%5BCODERS-ONLY%5D-Systems" >here</a> for more info.
 	</p>`
 }})
 
