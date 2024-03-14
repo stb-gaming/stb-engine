@@ -9,12 +9,14 @@ globalThis.panels = panels;
 createHTML({
 	id:"panel",
 	base:`<dialog class="panel">
-	<span class="panel-head">
-		<span class="panel-title"></span>
-		<button class="panel-pin">📌</button>
-		<button class="panel-close">❌</button>
-	</span>
-	<span class="panel-body"></span>
+	<div class="panel-head">
+		<h3 class="panel-title"></h3>
+		<span class="panel-actions">
+			<button class="panel-pin">📌</button>
+			<button class="panel-close">❌</button>
+		</span>
+	</div>
+	<div class="panel-body"></div>
 </dialog>`,
 	cb:setupPanel,
 	query:{
@@ -89,16 +91,21 @@ export function createPanel(panel) {
 
 		panel.element ??= createHTML({id:panel.id?"panel-"+panel.id:null,base:panel.base?"panel-"+panel.base:"panel",args:panel})
 	if(Object.hasOwn(panel,"element")) {
-		panel.open ??= panel.element["show"+(panel.prompt?"Modal":"")].bind(panel.element)
+		panel.open ??= ()=>{
+			panel.element["show"+(panel.prompt?"Modal":"")].call(panel.element)
+			const {width,height} = panel.element.getBoundingClientRect()
+			setElementPosition(panel.element,[window.innerWidth/2-width/2,window.innerHeight/2-height/2])
+			if(typeof panel.onopen === "function") {
+				panel.onopen()
+			}
+		}
 		panel.close ??= panel.element.close.bind(panel.element)
 	}
 
 	// Spawn
 	if(panel.single&& panel.element) spawnElement(panel.element)
-	if(panel.open) {
+	if(panel.open&&!panel.dontopen) {
 		panel.open();
-		const {width,height} = panel.element.getBoundingClientRect()
-		setElementPosition(panel.element,[window.innerWidth/2-width/2,window.innerHeight/2-height/2])
 	}
 
 

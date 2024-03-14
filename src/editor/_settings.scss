@@ -1,0 +1,51 @@
+#engine-settings {
+width: 700px;
+display: grid;
+grid-template-columns: 2fr 3fr;
+grid-template-rows: min-content auto;
+gap:2em;
+height:100%;
+width:100%;
+
+>h1 {
+	text-align: center;
+}
+
+	.scroll-list,#system-body {
+
+	overflow-y: scroll;
+	overflow-x: hidden;
+	}
+	.scroll-list {
+	display: flex;
+	flex-flow: column;
+	height: 100%;
+	>* {
+		display: grid;
+		grid-template-areas: "img title" "img summary";
+		height: 5em;
+		align-content: center;
+		justify-content: left;
+		text-align: left;
+		column-gap: 1em;
+		width: 100%;
+		padding-bottom: .4em;
+		padding-top: .4em;
+		img {
+			grid-area: img;
+			height: 4em;
+			width: 4em;
+			margin: auto;
+		}
+		.title {
+			grid-area: title;
+			font-size:1.5em;
+		}
+		.summary {
+			grid-area: summary;
+		}
+	}
+	}
+
+
+}
