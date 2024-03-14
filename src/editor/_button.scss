@@ -1,0 +1,32 @@
+
+:link,button, ::file-selector-button, input:is([type="color"]), input:is([type="reset"]), input:is([type="button"]), input:is([type="submit"]), a.btn{
+    &:hover {
+    outline: auto 1px;
+    }
+}
+
+
+button, .btn, , ::file-selector-button, input:is([type="color"]), input:is([type="reset"]), input:is([type="button"]), input:is([type="submit"]) {
+    border: none;
+    white-space: unset;
+  display: inline-block;
+
+  color: ButtonText;
+  // font: -moz-button;
+  white-space: pre;
+  text-align: center;
+  // overflow-clip-box: padding-box;
+  appearance: auto;
+  // -moz-default-appearance: button;
+  padding-block: 1px;
+  padding-inline: 8px;
+  cursor: pointer;
+  box-sizing: border-box;
+  user-select: none;
+  &:hover {
+    background-color: var(--darken);
+}
+  &:active {
+    background-color: var(--darken-more);
+}
+}

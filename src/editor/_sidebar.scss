@@ -1,0 +1,24 @@
+.sidebar {
+    overflow: scroll;
+    &.left {
+        grid-area: left;
+        // background-color: blue;
+    }
+    &.right {
+        grid-area: right;
+        // background-color: red;
+    }
+   .panel{
+        position: static !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        max-width: unset;
+        translate: unset;
+        width: 300px;
+            .prompt-head {
+                button{
+                    display: none;
+                }
+            }
+    }
+}

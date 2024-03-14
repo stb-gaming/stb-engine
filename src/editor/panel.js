@@ -9,12 +9,14 @@ globalThis.panels = panels;
 createHTML({
 	id:"panel",
 	base:`<dialog class="panel">
-	<span class="panel-head">
-		<span class="panel-title"></span>
-		<button class="panel-pin">📌</button>
-		<button class="panel-close">❌</button>
-	</span>
-	<span class="panel-body"></span>
+	<div class="panel-head">
+		<h3 class="panel-title"></h3>
+		<span class="panel-actions">
+			<button class="panel-pin">📌</button>
+			<button class="panel-close">❌</button>
+		</span>
+	</div>
+	<div class="panel-body"></div>
 </dialog>`,
 	cb:setupPanel,
 	query:{

@@ -1,0 +1,17 @@
+input {
+	&:not([type=submit]):not([type=button]):not([type=reset]), select {
+		&[type=checkbox] {
+			height: 1.5rem;
+		    width: 1.5rem;
+		    vertical-align: top;
+	    }
+
+		font-size:inherit;
+		line-height:inherit;
+		border-radius:.5em;
+		padding: .2em;
+		margin: .1em .5em;
+
+	}
+
+}

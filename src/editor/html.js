@@ -58,7 +58,7 @@ export function createHTML(html) {
 			html.cb(html.fragment,html.elements,html.args)
 		}
 	}
-
+	if(html.getfrag) return html.fragment;
 	return arr(html.fragment.children)
 }
 

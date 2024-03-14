@@ -8,7 +8,7 @@ createHTML({id:"form",base:`<form action="#" onsubmit="return false;"></form>`,c
 function setupForm(fragment,{form},schema) {
 
 	for(const key in scheme) {
-		form.appendChild(createField(key,schema[key]))
+		//form.appendChild(createField(key,schema[key]))
 	}
 
 }
