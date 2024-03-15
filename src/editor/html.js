@@ -4,7 +4,6 @@ import { defined, oneTimeEventListener, removeableEventListener,arr,fn } from '.
 export const getEl = (parent, query) => (query ? parent : document).querySelector(query || parent);
 
 const templates = {}
-globalThis.templates = templates;
 
 /**
  * Creates HTML elements based on the provided input.

@@ -1,77 +1,97 @@
-import { defined } from './util.js';
+import { defined,fn } from './util.js';
 import { htmlTag, createHTML } from './html.js';
 
 const createOption = (value, label = value) => htmlTag("option", { value }, label)
 
-createHTML({id:"form",base:`<form action="#" onsubmit="return false;"></form>`,cb:setupForm,query:{form:"form"}})
+//String - textbox
+//Number - numberbox
+//boolean - checkbox
+//object - select
 
-function setupForm(fragment,{form},schema) {
+createHTML({
+	id:"field-input",
+	base:`<input></input>`,
+	query:{input:"input"},
+	cb:setupInput
+})
+createHTML({
+	id:"field-select",
+	base:`<select></select>`,
+	query:{input:"select"},
+	cb:setupInput
+})
+createHTML({
+	id:"form",
+	base:`<form action="#"></form>`,
+	query:{form:"form"},
+	cb:setupForm
+})
 
-	for(const key in scheme) {
-		//form.appendChild(createField(key,schema[key]))
-	}
-
-}
-
-
-export function createField(name, {
+function setupInput(fragment,{input},{
 	options,
 	example,
 	placeholder = example,
 	value,
-	type = defined(value) && typeof value,
-	id = name,
-	label,
-} = {}) {
+	type = typeof value,
+	textContent,
+	name,
+	id=[type,+Math.round(Math.random()*1000),name].filter(a=>!!a).join("-"),
+	label=name
+}) {
 	if (type === "object") value = JSON.stringify(value)
-	type = {
-		"string": "text",
-		"boolean": "checkbox",
-	}[type] || type || "text";
-	let input = "";
-
-	if (options && typeof options === "object") {
-		const optionsStr = Array.isArray(options)
-			? options.map(value => createOption(value)).join("")
-			: Object.entries.map(([key, label]) => createOption(key, label)).join("")
-
-		input = createHtml(htmlTag("select", { id, name, value, placeholder }, optionsStr))
-	} else {
-		input = htmlTag("input", { id, name, type, placeholder, value })
+	if(input.tagName==="INPUT") {
+		input.type  = {
+			"string": "text",
+			"boolean": "checkbox",
+		}[type] || type || "text";
 	}
-	if (label) {
-		return htmlTag("div", {}, htmlTag("label", { for: id }, label) + input)
-	} else {
-		return input
+	if(placeholder) input.placeholder = placeholder
+	if(name) input.name = name
+	if(textContent) input.textContent = textContent
+	if(input.tagName==="SELECT"&&options && typeof options === "object") {
+
 	}
+	if(label) {
+		const container = document.createElement("div")
+		const children = [createHTML(`<label for="${id}">${label}</label>`),input]
+		if(type==="checkbox") {
+			children.reverse()
+		}
+		container.append(...children)
+		fragment.appendChild(container)
+	}
+
+	if(id) input.id = id
 }
 
-export function createForm(schema, onSubmit = () => { }) {
+
+
+function setupForm(fragment,{form},schema) {
 	if (!schema || typeof schema !== "object") return;
-	const fieldString = Object.entries(schema).map(([key, options]) =>
-		createField(key, typeof options === "object" ? options : { value: options })
-	).join("")
-	const formStr = htmlTag("form",{}, fieldString);
-
-	const form = createHTML(formStr);
 	form.schema = schema;
-	form.action = "#"
-	if(typeof onSubmit === "function") {
-		form.addEventListener("submit", () => {
-			onSubmit(getFormData(form, schema))
-			return false;
-		});
+	schema.submit &&= {type:"submit",value:"Submit",label:null,onsubmit:fn(schema.submit)}
+	for(let [key,value] of Object.entries(schema)) {
+		value = (typeof value === "object")?value:{value};
+		value.name = key
+		const base = typeof value.value === "object" ?"field-select":"field-input";
+		console.log({base,value})
+		form.appendChild(createHTML({base,args:value}))
 	}
-	if(onSubmit === true) {
-		form.method = "dialog"
-	}
-	return form;
-}
+	form.setAttribute("onsubmit","return false")
+	form.addEventListener("submit", e => {
+		e.preventDefault()
+		schema.submit.onsubmit(getFormData(form, schema))
+		return false
+	});
+	//form.appendChild(createHTML({base:"field-input",args:{type:"submit",value:"Submit"}}))
+		form.method = schema.submit?"none":"dialog"
 
+}
+// TODO: fix this output
 export function getFormData(form, schema = form.schema) {
 	if (!(form instanceof HTMLFormElement)) return;
 	const formData = new FormData(form);
-	const entries = Array.from(Object.keys(schema), key => {
+	const entries = Array.from(formData.keys(),key => {
 		if (!schema || !Object.hasOwn(schema,key)) return [];
 		const value = formData.get(key);
 		let options = schema[key];
@@ -92,4 +112,9 @@ export function getFormData(form, schema = form.schema) {
 	});
 	const data = Object.fromEntries(entries)
 	return data;
+}
+
+export const createForm = (schema={}, onSubmit = () => { }) => {
+	schema.submit ??=onSubmit;
+	return createHTML({base:"form",args:schema})
 }

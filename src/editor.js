@@ -1,4 +1,3 @@
-globalThis.STB_EDITOR = true;
 import "./editor/console";
 import { fn } from './editor/util'
 import { setupDragging } from './editor/drag'
@@ -9,6 +8,7 @@ import {createPanel} from './editor/panel';
 import "./editor/not-features";
 import {createSystem} from "./editor/systems.js";
 import {createMenuButton} from "./editor/menubar.js";
+import {importGist} from "./editor/gist.js";
 
 
 const createSpriteSchema = {
@@ -60,15 +60,18 @@ let panel = createPanel({
 createMenuButton("About",panel.open)
 
 
-Object.assign(globalThis, {
+globalThis.STB_EDITOR = {
 	createFunction:fn,
 	getFormData,
 	setElementPosition,
 	getElementPosition,
 	createPanel,
-	createSystem
-})
-
+	createSystem,
+	importGist,
+	createForm,
+	game:{
+	}
+}
 
 
 

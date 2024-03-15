@@ -1,6 +1,6 @@
 (()=>{
 	if(Object.hasOwn(globalThis,"STB_EDITOR")) {
-		createSystem({
+		STB_EDITOR.createSystem({
 			// System ID
 			id:"my-new-system",
 			//System Icon
