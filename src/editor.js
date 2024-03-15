@@ -1,3 +1,4 @@
+"use strict";
 import "./editor/console";
 import { fn } from './editor/util'
 import { setupDragging } from './editor/drag'
@@ -9,7 +10,7 @@ import "./editor/not-features";
 import {createSystem} from "./editor/systems.js";
 import {createMenuButton} from "./editor/menubar.js";
 import {importGist} from "./editor/gist.js";
-
+// import {createBinding} from  "./editor/help.js";
 
 const createSpriteSchema = {
 	url: {
@@ -69,9 +70,18 @@ globalThis.STB_EDITOR = {
 	createSystem,
 	importGist,
 	createForm,
+	// createBinding,
 	game:{
 	}
 }
 
 
 
+
+
+// if(location.hostname==="localhost") {
+// 	window.onbeforeunload = function(e) {
+// 		console.log(e)
+// 		e.preventDefault();
+//     }
+// }

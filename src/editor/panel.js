@@ -1,5 +1,5 @@
 import { htmlTag, createHTML, spawnElement, despawnElement, makeElementDragable,setElementPosition } from './html.js';
-import { defined, oneTimeEventListener, removeableEventListener, fn } from './util.js';
+import { defined, oneTimeEventListener, removeableEventListener, fn,whenever } from './util.js';
 import { createForm, getFormData } from './form';
 
 
@@ -42,7 +42,7 @@ function setupPanel(fragment,query,panel={}) {
 		query.close.remove();
 	} else {
 		query.close.addEventListener("click",()=>{
-			query.panel.close();
+			whenever(panel.close|| query.panel.close.bind(query.panel));
 		})
 	}
 	if(Object.hasOwn(panel, "body")) {
@@ -88,26 +88,38 @@ export function createPanel(panel) {
 	panel.single ??=!panel.id||panel.prompt;
 
 	// Construction
-
-		panel.element ??= createHTML({id:panel.id?"panel-"+panel.id:null,base:panel.base?"panel-"+panel.base:"panel",args:panel})
+	panel.element ??= createHTML({id:panel.id?"panel-"+panel.id:null,base:panel.base?"panel-"+panel.base:"panel",args:panel})
 	if(Object.hasOwn(panel,"element")) {
+		if(panel.prompt) panel.element.dataset.prompt=true;
 		panel.open ??= ()=>{
 			panel.element["show"+(panel.prompt?"Modal":"")].call(panel.element)
 			const {width,height} = panel.element.getBoundingClientRect()
 			setElementPosition(panel.element,[window.innerWidth/2-width/2,window.innerHeight/2-height/2])
 			if(typeof panel.onopen === "function") {
-				panel.onopen()
+				setTimeout(panel.onopen,0)
 			}
 		}
-		panel.close ??= panel.element.close.bind(panel.element)
+		console.log(panel)
+		panel.close = () =>{
+			panel.element.close()
+		}
 	}
 
 	// Spawn
 	if(panel.single&& panel.element) spawnElement(panel.element)
 	if(panel.open&&!panel.dontopen) {
-		panel.open();
+		panel.open()
 	}
 
 
 	return panel;
 }
+
+
+document.addEventListener("keydown",e =>{
+	console.debug(e)
+	if(e.key==="Escape"){
+		let closeBtns = document.querySelectorAll("[open] .panel-close")
+		if(closeBtns.length)closeBtns[closeBtns.length-1].click()
+	}
+})
