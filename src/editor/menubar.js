@@ -1,6 +1,8 @@
 import {createHTML} from './html.js';
+import {createBinding} from './help.js';
+import {whenever} from './util.js';
 
-const menubar = document.querySelector(".menubar")
+const menubar = document.querySelector("menu")
 
 createHTML({
 	id:"menu-button",
@@ -13,6 +15,20 @@ createHTML({
 })
 
 export function createMenuButton(label,onclick=()=>alert("Not Implemented Yet")) {
-	let buttom = createHTML({base:"menu-button",args:{label,onclick}})
-	menubar.appendChild(buttom)
+	whenever(()=>{
+	const button = createHTML({base:"menu-button",args:{label,onclick}})
+		menubar.appendChild(button)
+		createBinding(label,"Ctrl+"+menubar.children.length)
+	})
 }
+
+
+document.addEventListener("keydown",e =>{
+	if(e.ctrlKey) {
+		const n = parseInt(e.key)
+		if(n && !document.querySelector("[open][data-prompt]") ){
+
+			menubar.children[n-1].click()
+		}
+	}
+})

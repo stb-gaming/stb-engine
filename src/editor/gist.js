@@ -6,6 +6,7 @@ import {createForm} from './form';
 
 
 async function fetchText(url) {
+	if(!url) return
 	const response = await fetch(url)
 	return await response.text()
 }
@@ -23,7 +24,7 @@ function getLoadedGists() {
 }
 
 function getGistInfo(url) {
-	if(!url.startsWith("https:")) {
+	if(url && !url.startsWith("https:")) {
 		url = "https://gist.github.com/" + url
 	}
 	const regex = /https:\/\/gist.github.com\/([^\/\t\n\r]+)\/([^\/\t\n\r#]+)(?:\/([^\/\t\n\r#]+))?(?:(?:#file-)([^\/\t\n\r#]+))?/
@@ -33,7 +34,6 @@ function getGistInfo(url) {
 	return {user,id,rev,file}
 
 }
-
 
 
 export function importGist(url) {
@@ -59,8 +59,12 @@ createSystem({id:"create-system",title:"Add System",summary:"Create or import a 
 				value:"",
 				label:"Gist URL"
 			},
-			submit:(values)=>{
-				console.log(values)
+			submit:{
+				submit:(values)=>{
+
+					importGist(values.gist)
+				},
+				value:"Import Gist"
 			},
 		})
 		if(form instanceof Node) fragment.appendChild(form)

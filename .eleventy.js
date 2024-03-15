@@ -21,11 +21,12 @@ eleventyConfig.on("eleventy.before",async () =>{
 	await esbuild.build({
 		entryPoints:[`${input}/*.js`],
 		outdir:`${output}/assets/scripts`,
-		format: "esm",
+        format: "esm",
+        target:"firefox120",
 		bundle: true,
 		splitting: true,
 		minify: !serve,
-		sourcemap: true,
+		sourcemap: serve,
 
 	})
 });

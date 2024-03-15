@@ -1,3 +1,4 @@
+"use strict";
 (()=>{
 	if(Object.hasOwn(globalThis,"STB_EDITOR")) {
 		STB_EDITOR.createSystem({

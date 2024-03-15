@@ -33,12 +33,13 @@ function setupInput(fragment,{input},{
 	placeholder = example,
 	value,
 	type = typeof value,
-	textContent,
 	name,
 	id=[type,+Math.round(Math.random()*1000),name].filter(a=>!!a).join("-"),
-	label=name
+	label=name,
+	submit
 }) {
 	if (type === "object") value = JSON.stringify(value)
+		if(submit) type = "submit"
 	if(input.tagName==="INPUT") {
 		input.type  = {
 			"string": "text",
@@ -47,7 +48,7 @@ function setupInput(fragment,{input},{
 	}
 	if(placeholder) input.placeholder = placeholder
 	if(name) input.name = name
-	if(textContent) input.textContent = textContent
+	if(value) input.value = value
 	if(input.tagName==="SELECT"&&options && typeof options === "object") {
 
 	}
@@ -69,10 +70,13 @@ function setupInput(fragment,{input},{
 function setupForm(fragment,{form},schema) {
 	if (!schema || typeof schema !== "object") return;
 	form.schema = schema;
-	schema.submit &&= {type:"submit",value:"Submit",label:null,onsubmit:fn(schema.submit)}
+	if(typeof schema.submit=== "function") {
+		schema.submit &&= {type:"submit",value:"Submit",label:false,submit:fn(schema.submit)}
+	}
+	if(schema.submit)schema.submit.label ??=""
 	for(let [key,value] of Object.entries(schema)) {
-		value = (typeof value === "object")?value:{value};
-		value.name = key
+		value = (typeof value === "object"&&["value","type"].some(r=> Object.keys(value).includes(r)))?value:{value};
+		value.name ??= key
 		const base = typeof value.value === "object" ?"field-select":"field-input";
 		console.log({base,value})
 		form.appendChild(createHTML({base,args:value}))
@@ -80,14 +84,15 @@ function setupForm(fragment,{form},schema) {
 	form.setAttribute("onsubmit","return false")
 	form.addEventListener("submit", e => {
 		e.preventDefault()
-		schema.submit.onsubmit(getFormData(form, schema))
+		schema.submit.submit(getFormData(form, schema))
 		return false
 	});
 	//form.appendChild(createHTML({base:"field-input",args:{type:"submit",value:"Submit"}}))
 		form.method = schema.submit?"none":"dialog"
 
 }
-// TODO: fix this output
+
+
 export function getFormData(form, schema = form.schema) {
 	if (!(form instanceof HTMLFormElement)) return;
 	const formData = new FormData(form);

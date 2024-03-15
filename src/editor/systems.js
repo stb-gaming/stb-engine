@@ -16,6 +16,7 @@ const systemsManager = createHTML(
 			</div>
 			`);
 createHTML({
+
 			id:"system-null",
 			base:"<span class='system-none'>There is nothing here.</span>",
 		})
@@ -37,7 +38,8 @@ function selectSystem(id) {
 		system.tab.classList.toggle("active",false)
 		bodyElement.dataset.current = id;
 		titleElement.innerText = system.title;
-		bodyElement.append(...createHTML(system.settings||"system-null"))
+		const systemBody = createHTML(system.settings||"system-null");
+		bodyElement.append(...systemBody.length?systemBody:[systemBody])
 		console.debug(`Set system to ${id}`)
 	}else {
 		console.error(`There is no system called ${id}`)
