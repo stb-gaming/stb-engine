@@ -37,7 +37,7 @@ function selectSystem(id) {
 		system.tab.classList.toggle("active",false)
 		bodyElement.dataset.current = id;
 		titleElement.innerText = system.title;
-		bodyElement.appendChild(createHTML(system.settings||"system-null"))
+		bodyElement.append(...createHTML(system.settings||"system-null"))
 		console.debug(`Set system to ${id}`)
 	}else {
 		console.error(`There is no system called ${id}`)
@@ -104,10 +104,4 @@ export function createSystem(system) {
 	listElement.appendChild(system.tab)
 }
 
-
-createSystem({id:"create-system",title:"Add System",summary:"Create or import a game system",settings:{
-	base:`<p>
-	This area, is still being made, check <a href="https://github.com/stb-gaming/stb-engine/wiki/%5BCODERS-ONLY%5D-Systems" >here</a> for more info.
-	</p>`
-}})
 
