@@ -1,18 +1,15 @@
 import {createMenuButton} from './menubar.js';
 import {createPanel} from './panel.js';
 import {createHTML} from './html.js';
+import {STB_EDITOR} from './STB_EDITOR'
 
 
 const systems = {};
 
 const systemsManager = createHTML(
 	`<div id="engine-settings">
-				<h1>Systems</h1>
-				<h1 id="system-name"></h1>
-			<nav id="system-list" class="scroll-list">
-			</nav>
-			<section id="system-body">
-			</section>
+			<div id="system-list" class="scroll-list">
+			</div>
 			</div>
 			`);
 createHTML({
@@ -21,8 +18,6 @@ createHTML({
 			base:"<span class='system-none'>There is nothing here.</span>",
 		})
 const listElement = systemsManager.querySelector("#system-list")
-const titleElement = systemsManager.querySelector("#system-name")
-const bodyElement = systemsManager.querySelector("#system-body")
 
 
 function selectSystem(id) {
@@ -59,12 +54,14 @@ createHTML({
 		title:'.title',
 		summary:'.summary'
 	},
-	cb:(frag,el,{title="Sample System",summary="This is a placeholder",img="assets/img/ball.png",id})=>{
+	cb:(frag,el,{title="Sample System",summary="This is a placeholder",img="assets/img/ball.png",id,panel})=>{
+		console.warn("HELLO",panel)
 		el.img.src = img;
 		el.title.innerText = title;
 		el.summary.innerText = summary;
 		el.tab.addEventListener("click",()=>{
-			selectSystem(id)
+			//selectSystem(id)
+			createPanel(panel)
 		})
 	}
 })
@@ -79,15 +76,13 @@ const panel = createPanel({
 		body:body=>{
 			body.appendChild(systemsManager)
 		},
-		onopen:()=>{
-			if(!bodyElement.dataset.current && listElement.firstElementChild){
-				selectSystem(listElement.firstElementChild.dataset.id)
-			}
-		}
+		// onopen:()=>{
+		// 	if(!bodyElement.dataset.current && listElement.firstElementChild){
+		// 		selectSystem(listElement.firstElementChild.dataset.id)
+		// 	}
+		// }
 
 	})
-
-panel.element.dataset.max = "true";
 
 
 createMenuButton("Systems",panel.open)
@@ -104,6 +99,8 @@ export function createSystem(system) {
 		system.tab.remove();
 	}
 	listElement.appendChild(system.tab)
+	STB_EDITOR.game[system.id] ??= system.default||{}
+	return STB_EDITOR.game[system.id]
 }
 
 

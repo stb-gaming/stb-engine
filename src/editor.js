@@ -1,4 +1,5 @@
 "use strict";
+import {STB_EDITOR} from './editor/STB_EDITOR'
 import "./editor/console";
 import { fn } from './editor/util'
 import { setupDragging } from './editor/drag'
@@ -10,7 +11,7 @@ import "./editor/not-features";
 import {createSystem} from "./editor/systems.js";
 import {createMenuButton} from "./editor/menubar.js";
 import {importGist} from "./editor/gist.js";
-// import {createBinding} from  "./editor/help.js";
+import {createBinding} from  "./editor/help.js";
 
 const createSpriteSchema = {
 	url: {
@@ -60,21 +61,17 @@ let panel = createPanel({
 })
 createMenuButton("About",panel.open)
 
-
-globalThis.STB_EDITOR = {
+Object.assign(STB_EDITOR,{
 	createFunction:fn,
-	getFormData,
-	setElementPosition,
-	getElementPosition,
 	createPanel,
 	createSystem,
 	importGist,
 	createForm,
-	// createBinding,
-	game:{
-	}
-}
+	createMenuButton,
+	createBinding
+})
 
+globalThis.STB_EDITOR = STB_EDITOR;
 
 
 

@@ -65,15 +65,18 @@ function setupInput(fragment,{input},{
 	if(id) input.id = id
 }
 
-
-
 function setupForm(fragment,{form},schema) {
 	if (!schema || typeof schema !== "object") return;
 	form.schema = schema;
-	if(typeof schema.submit=== "function") {
-		schema.submit &&= {type:"submit",value:"Submit",label:false,submit:fn(schema.submit)}
+	if(schema.submit){
+		if(!schema.submit.submit) {
+			schema.submit= {submit:fn(schema.submit)}
+		}
+		schema.submit.type = "submit"
+		schema.submit.value ??= scheme.submit.label??"Submit"
+		schema.submit.label = false
+		//schema.submit.label ??=""
 	}
-	if(schema.submit)schema.submit.label ??=""
 	for(let [key,value] of Object.entries(schema)) {
 		value = (typeof value === "object"&&["value","type"].some(r=> Object.keys(value).includes(r)))?value:{value};
 		value.name ??= key
@@ -81,14 +84,14 @@ function setupForm(fragment,{form},schema) {
 		console.log({base,value})
 		form.appendChild(createHTML({base,args:value}))
 	}
-	form.setAttribute("onsubmit","return false")
+	if(!schema.submit.label) form.setAttribute("onsubmit","return false")
 	form.addEventListener("submit", e => {
 		e.preventDefault()
 		schema.submit.submit(getFormData(form, schema))
 		return false
 	});
 	//form.appendChild(createHTML({base:"field-input",args:{type:"submit",value:"Submit"}}))
-		form.method = schema.submit?"none":"dialog"
+		form.method = schema.submit?.panel?"dialog":"none"
 
 }
 
@@ -119,7 +122,9 @@ export function getFormData(form, schema = form.schema) {
 	return data;
 }
 
-export const createForm = (schema={}, onSubmit = () => { }) => {
-	schema.submit ??=onSubmit;
+export const createForm = (schema={}, onSubmit) => {
+	if(onSubmit) {
+		console.warn("This param is deprecated now")
+	}
 	return createHTML({base:"form",args:schema})
 }

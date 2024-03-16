@@ -1,8 +1,31 @@
 import {createHTML,spawnElement} from "./html";
 import {createSystem} from './systems';
 import {createForm} from './form';
+import {STB_EDITOR} from './STB_EDITOR'
 
 
+const gists = createSystem({
+	id:"gist",
+	title:"Add System",
+	summary:"Create or import a game system",
+	default:[],
+	panel:{
+		id:"gist",
+		form: {
+			gist:{
+				value:"",
+				label:"Gist URL"
+			},
+			submit:{
+				submit:(values)=>{
+
+					importGist(values.gist)
+				},
+				value:"Import Gist"
+			},
+		}
+}
+})
 
 
 async function fetchText(url) {
@@ -43,30 +66,8 @@ export function importGist(url) {
 	fetchText(url).then(text=>gist.element.text = text)
 	// gist.element.src = url
 	document.body.appendChild(gist.element)
-	STB_EDITOR.game.imports ??=[];
-	STB_EDITOR.game.imports.push(gist.id?`${gist.user??""}/${gist.id??""}/${gist.rev??""}/${gist.file??""}`:url)
+	STB_EDITOR.game.gist.push(gist.id?`${gist.user??""}/${gist.id??""}/${gist.rev??""}/${gist.file??""}`:url)
     return gist;
 }
 
 
-createSystem({id:"create-system",title:"Add System",summary:"Create or import a game system",settings:{
-	base:`<p>
-	This area, is still being made, check <a href="https://github.com/stb-gaming/stb-engine/wiki/Systems" >here</a> (coders only) for more info.
-	</p>`,
-	cb:fragment=>{
-		const form = createForm({
-			gist:{
-				value:"",
-				label:"Gist URL"
-			},
-			submit:{
-				submit:(values)=>{
-
-					importGist(values.gist)
-				},
-				value:"Import Gist"
-			},
-		})
-		if(form instanceof Node) fragment.appendChild(form)
-	}
-}})

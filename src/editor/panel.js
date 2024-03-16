@@ -46,12 +46,33 @@ function setupPanel(fragment,query,panel={}) {
 		})
 	}
 	if(Object.hasOwn(panel, "body")) {
-		fn(panel.body)(query.body)
-	}else if(Object.hasOwn(panel, "form")) {
-		const form = createForm(panel.form,true)
+		console.warn("panel.body will be changed to panel.fn")
+		panel.fn = panel.body
+	}
+
+
+	if(Object.hasOwn(panel, "text")) {
+		query.body.innerText = Array.isArray(panel.text) ? panel.text.join("\n"):panel.text;
+	}else
+	if(Object.hasOwn(panel, "html")) {
+		Array.isArray(panel.html)
+		?query.body.append(Array.from(panel.html,createHTML))
+		:query.body.appendChild(createHTML(panel.html));
+	} else if(Object.hasOwn(panel, "form")) {
+		if(panel.form.submit){
+			if(!panel.form.submit.submit) {
+				panel.form.submit = {
+					submit:fn(panel.form.submit)
+				}
+			}
+			panel.form.submit.panel = true;
+		}
+		const form = createForm(panel.form)
 		query.body.appendChild(form)
 
 		query.form = form;
+	} else if(Object.hasOwn(panel, "fn")) {
+		fn(panel.body)(query.body)
 	}
 	if(Object.hasOwn(panel, "onclose")) {
 		panel.onclose = fn(panel.onclose)
@@ -71,6 +92,7 @@ function dockPrompt(prompt, side) {
 }
 
 export function createPanel(panel) {
+	if(!panel) return;
 	// Registration
 	if (Object.hasOwn(panels, panel)) {
 		panel = panels[panel];

@@ -11,8 +11,8 @@
 			// System Description
 			summary:"This is a sample game system",
 			// In-editor confic
-			settings:{
-				base:`<p>This is a new system</p>`,
+			panel:{
+				html:`<p>This is a new system</p>`,
 			},
 		});
 		// Initialize Editor Stuff
