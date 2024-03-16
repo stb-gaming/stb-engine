@@ -1,4 +1,5 @@
-import * as Renderer from './engine/renderer'
-import './engine/sample-system';
 
-Object.assign(globalThis,Renderer);
+import * as Renderer from './engine/renderer'
+import * as Events from './engine/events';
+
+Object.assign(globalThis,Renderer,Events);
