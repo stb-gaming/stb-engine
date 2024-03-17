@@ -1,17 +1,17 @@
 "use strict";
-import {STB_EDITOR} from './editor/STB_EDITOR'
+import { STB_EDITOR } from './editor/STB_EDITOR'
 import "./editor/console";
 import { fn } from './editor/util'
 import { setupDragging } from './editor/drag'
 
 import { getEl, createHTML, htmlTag, getElementPosition, setElementPosition } from "./editor/html";
 import { createForm, getFormData } from './editor/form';
-import {createPanel} from './editor/panel';
+import { createPanel } from './editor/panel';
 import "./editor/not-features";
-import {createSystem} from "./editor/systems.js";
-import {createMenuButton} from "./editor/menubar.js";
-import {importGist} from "./editor/gist.js";
-import {createBinding} from  "./editor/help.js";
+import { createSystem } from "./editor/systems.js";
+import { createMenuButton } from "./editor/menubar.js";
+import { importGist } from "./editor/gist.js";
+import { createBinding } from "./editor/help.js";
 
 const createSpriteSchema = {
 	url: {
@@ -46,8 +46,7 @@ let panel = createPanel({
 	prompt: true,
 	pinnable: false,
 	moveable: false,
-	body:body=>{
-		body.append(...createHTML(`
+	html: `
 		<p>Say good bye to the placeholder "hello world"s and "how many apples do you have" as this is going to start having more useful things relating to creating games.</p>
 		<h2>What you have you been doing all this time?</h2>
 		<p>If the placeholder stuff wasn't evident, I have been creating tools todo with programatically creating editor functionality, so I can most effectivly build the engine and its editor simultaniously with the least effort, plus this editor as all about reducing as much effort as possible.
@@ -56,13 +55,12 @@ let panel = createPanel({
 		<br>
 		</p>
 		<a style="display:block;text-align:center"  href="https://github.com/stb-gaming/stb-engine/blob/master/notes/TODO.md" target="_blank">Whats next?</a>
-		`));
-	}
+		`
 })
-createMenuButton("About",panel.open)
+createMenuButton("About", panel.open)
 
-Object.assign(STB_EDITOR,{
-	createFunction:fn,
+Object.assign(STB_EDITOR, {
+	createFunction: fn,
 	createPanel,
 	createSystem,
 	importGist,
