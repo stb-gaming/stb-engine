@@ -1,11 +1,10 @@
 "use strict";
 import { STB_EDITOR } from './editor/STB_EDITOR'
 import "./editor/console";
-import { fn } from './editor/util'
-import { setupDragging } from './editor/drag'
+import { fn, oneTimeEventListener } from './editor/util'
 
-import { getEl, createHTML, htmlTag, getElementPosition, setElementPosition } from "./editor/html";
-import { createForm, getFormData } from './editor/form';
+// import { getEl, createHTML, htmlTag, getElementPosition, setElementPosition } from "./editor/html";
+import { createForm } from './editor/form';
 import { createPanel } from './editor/panel';
 import "./editor/not-features";
 import { createSystem } from "./editor/systems.js";
@@ -13,13 +12,13 @@ import { createMenuButton } from "./editor/menubar.js";
 import { importGist } from "./editor/gist.js";
 import { createBinding } from "./editor/help.js";
 
-const createSpriteSchema = {
+/*const createSpriteSchema = {
 	url: {
 		label: "Sprite URL",
 		value: "assets/img/ball.png"
 	},
 	"": { type: "submit", value: "Create" }
-}
+}*/
 
 
 // getEl("#createSprite").addEventListener("click", () => {
@@ -42,10 +41,11 @@ const createSpriteSchema = {
 
 
 let panel = createPanel({
+	id: "about",
+	single: true,
 	title: "Big Changes are coming",
-	prompt: true,
 	pinnable: false,
-	moveable: false,
+	dontopen: true,
 	html: `
 		<p>Say good bye to the placeholder "hello world"s and "how many apples do you have" as this is going to start having more useful things relating to creating games.</p>
 		<h2>What you have you been doing all this time?</h2>
@@ -66,7 +66,8 @@ Object.assign(STB_EDITOR, {
 	importGist,
 	createForm,
 	createMenuButton,
-	createBinding
+	createBinding,
+	oneTimeEventListener
 })
 
 globalThis.STB_EDITOR = STB_EDITOR;

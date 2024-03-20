@@ -1,5 +1,5 @@
-import { htmlTag, createHTML, spawnElement, despawnElement, makeElementDragable, setElementPosition } from './html.js';
-import { defined, oneTimeEventListener, removeableEventListener, fn, whenever } from './util.js';
+import { createHTML, spawnElement, makeElementDragable, setElementPosition } from './html.js';
+import { fn, whenever } from './util.js';
 import { createForm, getFormData } from './form';
 
 
@@ -31,7 +31,6 @@ createHTML({
 
 
 function setupPanel(fragment, query, panel = {}) {
-	const out = {};
 	console.debug("Setup Panel", { fragment, query, panel })
 	query.title.innerText = panel.title ?? query.title.innerText
 
@@ -53,26 +52,28 @@ function setupPanel(fragment, query, panel = {}) {
 
 	if (Object.hasOwn(panel, "text")) {
 		query.body.innerText = Array.isArray(panel.text) ? panel.text.join("\n") : panel.text;
-	} else
-		if (Object.hasOwn(panel, "html")) {
-			const parsedElements = Array.isArray(panel.html) ? Array.from(panel.html, createHTML) : createHTML(panel.html)
-			parsedElements instanceof HTMLCollection.prototype ? query.body.append(...parsedElements) : query.body.appendChild(parsedElements)
-		} else if (Object.hasOwn(panel, "form")) {
-			if (panel.form.submit) {
-				if (!panel.form.submit.submit) {
-					panel.form.submit = {
-						submit: fn(panel.form.submit)
-					}
+	}
+	if (Object.hasOwn(panel, "html")) {
+		const parsedElements = Array.isArray(panel.html) ? Array.from(panel.html, createHTML) : createHTML(panel.html)
+		parsedElements instanceof HTMLCollection ? query.body.append(...parsedElements) : query.body.appendChild(parsedElements)
+	}
+	if (Object.hasOwn(panel, "form")) {
+		if (panel.form.submit) {
+			if (!panel.form.submit.submit) {
+				panel.form.submit = {
+					submit: fn(panel.form.submit)
 				}
-				panel.form.submit.panel = true;
 			}
-			const form = createForm(panel.form)
-			query.body.appendChild(form)
-
-			query.form = form;
-		} else if (Object.hasOwn(panel, "fn")) {
-			fn(panel.body)(query.body)
+			panel.form.submit.panel = true;
 		}
+		const form = createForm(panel.form)
+		query.body.appendChild(form)
+
+		query.form = form;
+	}
+	if (Object.hasOwn(panel, "fn")) {
+		fn(panel.body)(query.body)
+	}
 	if (Object.hasOwn(panel, "onclose")) {
 		panel.onclose = fn(panel.onclose)
 		query.panel.addEventListener("close", () => {
@@ -86,8 +87,7 @@ function setupPanel(fragment, query, panel = {}) {
 
 function dockPrompt(prompt, side) {
 	const sidebar = document.querySelector("body>.sidebar." + side)
-	sidebar.appendChild(prompt)
-
+	sidebar.appendChild(prompt);
 }
 
 export function createPanel(panel) {
@@ -116,8 +116,9 @@ export function createPanel(panel) {
 			panel.element["show" + (panel.prompt ? "Modal" : "")].call(panel.element)
 			const { width, height } = panel.element.getBoundingClientRect()
 			setElementPosition(panel.element, [window.innerWidth / 2 - width / 2, window.innerHeight / 2 - height / 2])
+			spawnElement(panel.element)
 			if (typeof panel.onopen === "function") {
-				setTimeout(panel.onopen, 0)
+				whenever(panel.onopen, 0)
 			}
 		}
 		console.log(panel)
@@ -138,7 +139,6 @@ export function createPanel(panel) {
 
 
 document.addEventListener("keydown", e => {
-	console.debug(e)
 	if (e.key === "Escape") {
 		let closeBtns = document.querySelectorAll("[open] .panel-close")
 		if (closeBtns.length) closeBtns[closeBtns.length - 1].click()

@@ -3,9 +3,7 @@ import { createPanel } from './panel.js';
 import { createHTML } from './html.js';
 
 
-// const menuBarItems = document.querySelector(".menubar")
-
-const helpContent = createHTML(`<table><tr><th>Action</th><th>Key</th></tr></table>`)
+// const menuBarItems = document.querySelector(".menubar"))
 
 
 export function createBinding(name, ...newBinds) {
@@ -14,7 +12,7 @@ export function createBinding(name, ...newBinds) {
 	if (row.parentNode instanceof DocumentFragment) helpContent.appendChild(row)
 	const oldBinds = Array.from(row.querySelectorAll(":not(:first-child)"), row => row.textContent)
 	const binds = new Set([...oldBinds, ...newBinds])
-	console.debug(binds)
+	// console.debug(binds)
 	row.innerHTML = [name, ...binds].map(v => `<td>${v}</td>`).join("");
 }
 
@@ -24,11 +22,9 @@ const panel = createPanel({
 	single: true,
 	pinnable: false,
 	dontopen: true,
-	fn: body => {
-		body.appendChild(helpContent)
-
-	}
+	html: `<table><tr><th>Action</th><th>Key</th></tr></table>`
 })
+const helpContent = panel.element.querySelector("table")
 document.addEventListener("keydown", e => {
 	if (e.ctrlKey) {
 		if (e.key === "/") panel.open()

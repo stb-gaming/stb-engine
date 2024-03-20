@@ -21,6 +21,8 @@ export function callEvent(name, ...args) {
 	}
 }
 
+export const emitEvent = callEvent;
+
 export function onEvent(name, cb) {
 	if (!name || typeof name !== "string") {
 		console.error(`Invalid event name`, name);

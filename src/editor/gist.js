@@ -1,35 +1,35 @@
-import {createHTML,spawnElement} from "./html";
-import {createSystem} from './systems';
-import {createForm} from './form';
-import {STB_EDITOR} from './STB_EDITOR'
+import { createHTML, spawnElement } from "./html";
+import { createSystem } from './systems';
+import { STB_EDITOR } from './STB_EDITOR'
 
 
-const gists = createSystem({
-	id:"gist",
-	title:"Add System",
-	summary:"Create or import a game system",
-	default:[],
-	panel:{
-		id:"gist",
+createSystem({
+	id: "imports",
+	title: "Add System",
+	summary: "Create or import a game system",
+	panel: {
+		id: "gist",
 		form: {
-			gist:{
-				value:"",
-				label:"Gist URL"
+			gist: {
+				value: "",
+				label: "Gist URL"
 			},
-			submit:{
-				submit:(values)=>{
+			submit: {
+				submit: (values) => {
 
 					importGist(values.gist)
 				},
-				value:"Import Gist"
+				value: "Import Gist"
 			},
 		}
-}
+	}
 })
+
+const gists = STB_EDITOR.game.imports ??= [];
 
 
 async function fetchText(url) {
-	if(!url) return
+	if (!url) return
 	const response = await fetch(url)
 	return await response.text()
 }
@@ -37,8 +37,8 @@ async function fetchText(url) {
 
 function createGistURL(gist) {
 	let url = `https://gist.githubusercontent.com/${gist.user}/${gist.id}/raw/`
-	if(gist.revision) url += gist.revision + "/";
-	if(gist.file) url += gist.file
+	if (gist.revision) url += gist.revision + "/";
+	if (gist.file) url += gist.file
 	return url;
 }
 
@@ -47,27 +47,27 @@ function getLoadedGists() {
 }
 
 function getGistInfo(url) {
-	if(url && !url.startsWith("https:")) {
+	if (url && !url.startsWith("https:")) {
 		url = "https://gist.github.com/" + url
 	}
 	const regex = /https:\/\/gist.github.com\/([^\/\t\n\r]+)\/([^\/\t\n\r#]+)(?:\/([^\/\t\n\r#]+))?(?:(?:#file-)([^\/\t\n\r#]+))?/
 	const regexRaw = /https:\/\/gist\.githubusercontent\.com\/([^\/\t\n\r]+)\/([^\/\t\n\r]+)\/raw\/?([^\/\t\n\r]+)?\/?([^\/\t\n\r]+)?/
-	let [_,user,id,rev,file] = url.includes("gitusercontent") ? regexRaw.exec(url):regex.exec(url)
+	let [_, user, id, rev, file] = url.includes("gitusercontent") ? regexRaw.exec(url) : regex.exec(url)
 
-	return {user,id,rev,file}
+	return { user, id, rev, file }
 
 }
 
 
 export function importGist(url) {
-    const gist = getGistInfo(url);
-	if(Object.hasOwn(gist,"id")) url = createGistURL(gist)
+	const gist = getGistInfo(url);
+	if (Object.hasOwn(gist, "id")) url = createGistURL(gist)
 	gist.element = document.createElement("script")
-	fetchText(url).then(text=>gist.element.text = text)
+	fetchText(url).then(text => gist.element.text = text)
 	// gist.element.src = url
 	document.body.appendChild(gist.element)
-	STB_EDITOR.game.gist.push(gist.id?`${gist.user??""}/${gist.id??""}/${gist.rev??""}/${gist.file??""}`:url)
-    return gist;
+	gists.push(gist.id ? `${gist.user ?? ""}/${gist.id ?? ""}/${gist.rev ?? ""}/${gist.file ?? ""}` : url)
+	return gist;
 }
 
 

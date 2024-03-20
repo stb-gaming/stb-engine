@@ -11,12 +11,9 @@ width:100%;
 	text-align: center;
 }
 
-	.scroll-list,#system-body {
-
+.scroll-list {
 	overflow-y: scroll;
 	overflow-x: hidden;
-	}
-	.scroll-list {
 	display: flex;
 	flex-flow: column;
 	height: 100%;

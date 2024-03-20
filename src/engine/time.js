@@ -8,16 +8,15 @@ if (Object.hasOwn(globalThis, "STB_EDITOR")) {
 		//System Icon
 		// img:"https://avatars.githubusercontent.com/u/583231",
 		/// System Name
-		default: null,
-		title: "Time",
+		title: "GameLoop",
 		// System Description
-		summary: "Manages gameloop and timings",
+		summary: "Click to set FPS",
 		panel: {
 			form: {
 				fixedFPS: defaultFixedFPS,
 				submit: {
 					submit: function({ fixedFPS }) {
-						game.title.targetDeltaFixed = 1 / fixedFPS;
+						game.time.targetDeltaFixed = 1 / fixedFPS;
 					}
 				}
 			}
@@ -68,7 +67,4 @@ onEvent("createEvent", name => {
 
 
 	}
-})
-onEvent("fixedUpdate", (delta, realDelta) => {
-	console.log({ delta, fps: 1 / delta, realDelta })
 })

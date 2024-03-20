@@ -1,27 +1,27 @@
-import { defined, oneTimeEventListener, removeableEventListener,arr,fn } from './util.js';
+import { defined, oneTimeEventListener, removeableEventListener, arr, fn } from './util.js';
 
 
 export const getEl = (parent, query) => (query ? parent : document).querySelector(query || parent);
 
-const templates = {}
-
+const templates = {};
 
 export function createHTML(html) {
-	if(typeof html === "string") html={base:html}
-	html.cb &&=fn(html.cb)
+	if (html instanceof HTMLElement) return html;
+	if (typeof html === "string") html = { base: html }
+	html.cb &&= fn(html.cb)
 
 	const base = templates[html.base];
 	// Create Derivied
-	if(base?.fragment instanceof DocumentFragment ) {
+	if (base?.fragment instanceof DocumentFragment) {
 		html.fragment = base.fragment.cloneNode(true);
-		console.debug(`Created Derivation of ${html.base}`,base.fragment,html.fragment)
+		console.debug(`Created Derivation of ${html.base}`, base.fragment, html.fragment)
 
-		if(typeof base.cb === "function") {
-			for (const k in base.query||{}) {
+		if (typeof base.cb === "function") {
+			for (const k in base.query || {}) {
 				html.elements ??= {};
 				html.elements[k] ??= html.fragment.querySelector(base.query[k])
 			}
-			base.cb(html.fragment,html.elements,html.args)
+			base.cb(html.fragment, html.elements, html.args)
 		}
 	} else {
 		// Create fagment from HTML string
@@ -31,24 +31,24 @@ export function createHTML(html) {
 		console.debug(
 			defined(html.id)
 				? "✅ Created a reusable HTML fragment"
-				: "❌ Created an HTML fragment without the intention of reusing it",html
+				: "❌ Created an HTML fragment without the intention of reusing it", html
 		);
 	}
 	// store Derivied template
-	if(html.id) {
+	if (html.id) {
 		//Store template
 		templates[html.id] ??= html;
-		console.debug(`Registered new HTML Fragment '${html.id}':`,templates[html.id])
-	} else if(html.cb) {
-		if(typeof html.cb === "function") {
-			for (const k in html.query||{}) {
+		console.debug(`Registered new HTML Fragment '${html.id}':`, templates[html.id])
+	} else if (html.cb) {
+		if (typeof html.cb === "function") {
+			for (const k in html.query || {}) {
 				html.elements ??= {};
 				html.elements[k] ??= html.fragment.querySelector(html.query[k])
 			}
-			html.cb(html.fragment,html.elements,html.args)
+			html.cb(html.fragment, html.elements, html.args)
 		}
 	}
-	if(html.getfrag) return html.fragment;
+	if (html.getfrag) return html.fragment;
 	return arr(html.fragment.children)
 }
 
@@ -56,8 +56,8 @@ globalThis.createHTML = createHTML
 
 export function htmlTag(tag = "div", attribs = {}, contents = "") {
 	const attribStr = Object.entries(attribs)
-				.map(([k, v]) => (defined(v) ? `${k}='${v}'` : ""))
-				.join(" ").trim()
+		.map(([k, v]) => (defined(v) ? `${k}='${v}'` : ""))
+		.join(" ").trim()
 	return `<${tag} ${attribStr}>${contents}</${tag}>`
 }
 
