@@ -1,4 +1,4 @@
-import { } from "./events.js";
+import { onEvent } from "./events.js";
 import { game } from './game.js';
 
 const SKY_REMOTE = {
@@ -64,15 +64,16 @@ const input = game.input ??= {
 }
 
 
-function updateDown({ type, key }) {
+function inputHandler({ type, key }) {
+	key &&= key.toLowerCase()
 	switch (type) {
 		case "keydown":
-			input.down.add(key.toLowerCase());
-			input.press.add(key.toLowerCase());
+			input.down.add(key);
+			input.press.add(key);
 			break;
 		case "keyup":
-			input.down.delete(key.toLowerCase());
-			input.release.add(key.toLowerCase());
+			input.down.delete(key);
+			input.release.add(key);
 			break;
 	}
 
@@ -83,11 +84,11 @@ function refreshInputs() {
 	input.release.clear();
 }
 
-function checkInput() {
+function ensureInput() {
 	if (!eventsSetup) {
 		eventsSetup = true;
-		document.addEventListener('keydown', updateDown)
-		document.addEventListener('keyup', updateDown)
+		document.addEventListener('keydown', inputHandler)
+		document.addEventListener('keyup', inputHandler)
 		onEvent("frameEnd", refreshInputs)
 		console.debug("Attached inputs")
 
@@ -95,17 +96,17 @@ function checkInput() {
 }
 
 export function buttonDown(button) {
-	checkInput();
+	ensureInput();
 	return input.binds.hasOwnProperty(button) &&
 		input.binds[button].some(key => input.down.has(key))
 }
 export function buttonPressed(button) {
-	checkInput();
+	ensureInput();
 	return input.binds.hasOwnProperty(button) &&
 		input.binds[button].some(key => input.press.has(key))
 }
 export function buttonReleased(button) {
-	checkInput();
+	ensureInput();
 	return input.binds.hasOwnProperty(button) &&
 		input.binds[button].some(key => input.release.has(key))
 }
