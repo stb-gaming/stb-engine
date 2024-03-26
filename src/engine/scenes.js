@@ -19,8 +19,29 @@ if (Object.hasOwn(globalThis, "STB_EDITOR")) {
 	STB_EDITOR.createSystem({
 		id: "scenes",
 		title: "Scenes, Entities and Components",
-		summary: "Scenes, Entities and Components"
+		summary: "Scenes, Entities and Components",
+		panel: {
+			title: "Scene",
+			fn: body => {
+				const form = STB_EDITOR.createForm({
+					scene: {
+						value: "main",
+						type: "datalist"
+					},
+					submit: false
+				})
+				body.appendChild(form)
+				const list = STB_EDITOR.createHTML(`
+					<div id="Entity list" class="scroll-list">
+					</div>
+					`,)
+				body.appendChild(list)
+
+			}
+		}
 	});
+
+
 }
 
 

@@ -67,7 +67,8 @@ Object.assign(STB_EDITOR, {
 	createForm,
 	createMenuButton,
 	createBinding,
-	oneTimeEventListener
+	oneTimeEventListener,
+	createHTML
 })
 
 globalThis.STB_EDITOR = STB_EDITOR;

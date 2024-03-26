@@ -7,6 +7,18 @@ import { createHTML } from './html.js';
 //object - select
 
 createHTML({
+	id: "field-option",
+	base: `<option></option>`,
+	query: { input: "option" },
+	cb: (_, { input }, attribs = {}) => {
+		input.innerText = attribs.label || attribs.value;
+		delete attribs.label;
+		for (const key in attribs) {
+			input.setAttribute(key, attribs[key])
+		}
+	}
+})
+createHTML({
 	id: "field-input",
 	base: `<input></input>`,
 	query: { input: "input" },
@@ -34,22 +46,38 @@ function setupInput(fragment, { input }, {
 	name,
 	events,
 	id = [type, +Math.round(Math.random() * 1000), name].filter(a => !!a).join("-"),
-	label = name,
+	label,
 	submit,
 	...attribs
 }) {
+	let container;
 	if (type === "object") value = JSON.stringify(value)
 	if (submit) type = "submit"
 	if (input.tagName === "INPUT") {
 		input.type = {
 			"string": "text",
 			"boolean": "checkbox",
-		}[type] || type || "text";
+		}[type] || type;
 	}
 	if (placeholder) input.placeholder = placeholder
 	if (name) input.name = name
 	if (value) input.value = value
-	if (input.tagName === "SELECT" && options && typeof options === "object") {
+	if (options && typeof options === "object") {
+		options = options.map(o => createHTML({ id: "field-option", args: o }));
+		if (input.tagName === "SELECT") {
+			input.append(...options)
+		} else {
+			if (type === "datalist") {
+				const datalist = createHTML("<datalist></datalist>")
+				datalist.id = input.id + "-datalist";
+				datalist.apppend(datalist)
+				input.list = datalist.id;
+				container ??= document.createElement("div")
+				container.appendChild(input)
+				container.appendChild(datalist)
+				fragment.appendChild(container)
+			}
+		}
 
 	}
 	if (events) {
@@ -61,12 +89,11 @@ function setupInput(fragment, { input }, {
 		input.setAttribute(key, attribs[key])
 	}
 	if (label) {
-		const container = document.createElement("div")
-		const children = [createHTML(`<label for="${id}">${label}</label>`), input]
-		if (type === "checkbox") {
-			children.reverse()
-		}
-		container.append(...children)
+		container ??= document.createElement("div")
+		const label = createHTML(`<label for="${id}">${label}</label>`);
+		const action = type === "checkbox" ? "appendChild" : "prepend";
+		input[action](input);
+		input[action](input)
 		fragment.appendChild(container)
 	}
 

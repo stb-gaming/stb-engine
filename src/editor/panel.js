@@ -72,7 +72,7 @@ function setupPanel(fragment, query, panel = {}) {
 		query.form = form;
 	}
 	if (Object.hasOwn(panel, "fn")) {
-		fn(panel.body)(query.body)
+		fn(panel.fn)(query.body)
 	}
 	if (Object.hasOwn(panel, "onclose")) {
 		panel.onclose = fn(panel.onclose)
