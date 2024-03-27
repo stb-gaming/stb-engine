@@ -3,7 +3,7 @@ import { STB_EDITOR } from './editor/STB_EDITOR'
 import "./editor/console";
 import { fn, oneTimeEventListener } from './editor/util'
 
-// import { getEl, createHTML, htmlTag, getElementPosition, setElementPosition } from "./editor/html";
+import { getEl, createHTML, htmlTag, getElementPosition, setElementPosition } from "./editor/html";
 import { createForm } from './editor/form';
 import { createPanel } from './editor/panel';
 import "./editor/not-features";

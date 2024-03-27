@@ -1,7 +1,8 @@
 import { createMenuButton } from './menubar.js';
 import { createPanel } from './panel.js';
 import { createHTML } from './html.js';
-import { STB_EDITOR } from './STB_EDITOR'
+import { STB_EDITOR } from './STB_EDITOR';
+import { defined, fn } from './util.js';
 
 
 const systems = {};
@@ -30,7 +31,7 @@ createHTML({
 
 
 createHTML({
-	id: "system-tab",
+	id: "scroll-list-item",
 	base: `<button>
 			<img src="assets/img/ball.png"/>
 			<strong class="title">Hello World</strong>
@@ -42,17 +43,20 @@ createHTML({
 		title: '.title',
 		summary: '.summary'
 	},
-	cb: (_, el, { title = "Sample System", summary = "This is a placeholder", img = "assets/img/ball.png", panel }) => {
-		console.warn("HELLO", panel)
+	cb: (_, el, { title = "Sample System", summary = "This is a placeholder", img = "assets/img/ball.png", panel,click }) => {		console.warn("HELLO", panel)
 		el.img.src = img;
 		el.title.innerText = title;
 		el.summary.innerText = summary;
 		if (panel) {
 			panel.title ??= title;
+			
+			el.tab.addEventListener("click", () => {
+				createPanel(panel)
+			})
 		}
-		el.tab.addEventListener("click", () => {
-			createPanel(panel)
-		})
+		if(click) {
+			el.tab.addEventListener("click", fn(click))
+		}
 	}
 })
 
@@ -66,7 +70,7 @@ export function createSystem(system) {
 		systems[system.id] = system;
 		console.debug("Registered new system", system)
 	}
-	system.tab = createHTML({ base: "system-tab", args: system })
+	system.tab = createHTML({ base: "scroll-list-item", args: system })
 	system.tab.dataset.id = system.id;
 	system.remove = () => {
 		system.tab.remove();

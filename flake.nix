@@ -19,6 +19,7 @@
       nativeBuildInputs = with pkgs; [
         cacert
          pnpm
+         nodePackages.typescript-language-server
       ];
       buildPhase = ''
         export HOME=$NIX_BUILD_TOP

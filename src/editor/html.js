@@ -51,8 +51,7 @@ export function createHTML(html) {
 	if (html.getfrag) return html.fragment;
 	return arr(html.fragment.children)
 }
-
-globalThis.createHTML = createHTML
+//globalThis.createHTML = createHTML
 
 export function htmlTag(tag = "div", attribs = {}, contents = "") {
 	const attribStr = Object.entries(attribs)

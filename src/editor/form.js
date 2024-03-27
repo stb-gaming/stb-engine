@@ -51,14 +51,17 @@ function setupInput(fragment, { input }, {
 	...attribs
 }) {
 	let container;
+	if (id) input.id = id
 	if (type === "object") value = JSON.stringify(value)
-	if (submit) type = "submit"
 	if (input.tagName === "INPUT") {
 		input.type = {
 			"string": "text",
 			"boolean": "checkbox",
 		}[type] || type;
 	}
+	
+	if (submit) type = "submit";
+	
 	if (placeholder) input.placeholder = placeholder
 	if (name) input.name = name
 	if (value) input.value = value
@@ -70,8 +73,8 @@ function setupInput(fragment, { input }, {
 			if (type === "datalist") {
 				const datalist = createHTML("<datalist></datalist>")
 				datalist.id = input.id + "-datalist";
-				datalist.apppend(datalist)
-				input.list = datalist.id;
+				datalist.append(...options)
+				input.setAttribute("list", datalist.id)
 				container ??= document.createElement("div")
 				container.appendChild(input)
 				container.appendChild(datalist)
@@ -90,14 +93,13 @@ function setupInput(fragment, { input }, {
 	}
 	if (label) {
 		container ??= document.createElement("div")
-		const label = createHTML(`<label for="${id}">${label}</label>`);
+		const labelElement = createHTML(`<label for="${id}">${label}</label>`);
 		const action = type === "checkbox" ? "appendChild" : "prepend";
-		input[action](input);
-		input[action](input)
+		container[action](input);
+		container[action](labelElement)
 		fragment.appendChild(container)
 	}
 
-	if (id) input.id = id
 }
 
 function setupForm(_, { form }, schema) {
@@ -107,13 +109,13 @@ function setupForm(_, { form }, schema) {
 		if (!schema.submit.submit) {
 			schema.submit = { submit: fn(schema.submit) }
 		}
-		schema.submit.type = "submit"
+		schema.submit.type ??= "submit"
 		schema.submit.value ??= schema.submit.label ?? "Submit"
 		schema.submit.label = false
 		//schema.submit.label ??=""
 	}
 	for (let [key, value] of Object.entries(schema)) {
-		value = (typeof value === "object" && ["value", "type"].some(r => Object.keys(value).includes(r))) ? value : { value };
+		value = (value && typeof value === "object" && ["value", "type"].some(r => Object.keys(value).includes(r))) ? value : { value };
 		value.name ??= key
 		const base = typeof value.value === "object" ? "field-select" : "field-input";
 		console.log({ base, value })
@@ -162,4 +164,4 @@ export const createForm = (schema = {}, onSubmit) => {
 		console.warn("This param is deprecated now")
 	}
 	return createHTML({ base: "form", args: schema })
-}
+y}

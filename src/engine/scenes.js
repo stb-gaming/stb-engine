@@ -16,6 +16,31 @@ import { callEvent, emitEvent, onEvent } from "./events";
  */
 
 if (Object.hasOwn(globalThis, "STB_EDITOR")) {
+
+	const list = STB_EDITOR.createHTML(`
+					<div id="Entity list" class="scroll-list">
+					</div>
+					`,)
+
+
+						const form = STB_EDITOR.createForm({
+					scene: {
+						value: "main",
+						type: "datalist",
+						options: []
+					},
+					submit:{
+						type:"hidden",
+						submit:({scene}) =>{
+							console.log("New Scene",scene)
+							changeScene(scene)
+						}
+					}
+				})
+
+				
+				const datalist = form.querySelector("datalist")
+
 	STB_EDITOR.createSystem({
 		id: "scenes",
 		title: "Scenes, Entities and Components",
@@ -23,25 +48,40 @@ if (Object.hasOwn(globalThis, "STB_EDITOR")) {
 		panel: {
 			title: "Scene",
 			fn: body => {
-				const form = STB_EDITOR.createForm({
-					scene: {
-						value: "main",
-						type: "datalist"
-					},
-					submit: false
-				})
+			
 				body.appendChild(form)
-				const list = STB_EDITOR.createHTML(`
-					<div id="Entity list" class="scroll-list">
-					</div>
-					`,)
+				console.log(form)
+			
 				body.appendChild(list)
 
+				onEvent("createScene",name=>{
+					datalist.appendChild(STB_EDITOR.createHTML({base:"field-option",args:{
+						value:name
+					}}))
+				})
+
+				onEvent("addComponent",(id,component)=>{
+					if(component === "name"){
+						let entityElement  = STB_EDITOR.createHTML({
+							base:"scroll-list-item",
+							args:{
+								title: names[id],
+								summary:`Entity ${id}`
+							},
+						})
+
+						list.appendChild(entityElement)
+					}
+				})
 			}
 		}
 	});
 
-
+	STB_EDITOR.createMenuButton("Create Entity",()=>{
+		let name;
+		while (!name || typeof name !== "string") name = prompt("Entity Name")
+		addComponent("name",null,name);
+	})
 }
 
 
@@ -137,3 +177,12 @@ export function addComponent(componentId, entityId = game.current?.entities.leng
 	callEvent("addComponent", entityId, componentId, ...args)
 	console.debug(`Attached component ${componentId} to enity ${entityId}`);
 }
+
+
+
+const names = createComponent("name")
+onEvent("addComponent",(entity,component,name)=>{
+	if(component==="name") {
+		names[entity] = name;
+	}
+})
