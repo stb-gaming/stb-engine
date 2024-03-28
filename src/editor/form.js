@@ -11,6 +11,10 @@ createHTML({
 	base: `<option></option>`,
 	query: { input: "option" },
 	cb: (_, { input }, attribs = {}) => {
+		if (typeof attribs !== "object") {
+			attribs = { value: attribs }
+		}
+
 		input.innerText = attribs.label || attribs.value;
 		delete attribs.label;
 		for (const key in attribs) {
@@ -59,21 +63,21 @@ function setupInput(fragment, { input }, {
 			"boolean": "checkbox",
 		}[type] || type;
 	}
-	
+
 	if (submit) type = "submit";
-	
+
 	if (placeholder) input.placeholder = placeholder
 	if (name) input.name = name
 	if (value) input.value = value
 	if (options && typeof options === "object") {
-		options = options.map(o => createHTML({ id: "field-option", args: o }));
+		const optionElements = options.map(o => createHTML({ base: "field-option", args: o }));
 		if (input.tagName === "SELECT") {
-			input.append(...options)
+			input.append(...optionElements)
 		} else {
 			if (type === "datalist") {
 				const datalist = createHTML("<datalist></datalist>")
 				datalist.id = input.id + "-datalist";
-				datalist.append(...options)
+				datalist.append(...optionElements)
 				input.setAttribute("list", datalist.id)
 				container ??= document.createElement("div")
 				container.appendChild(input)
@@ -115,9 +119,9 @@ function setupForm(_, { form }, schema) {
 		//schema.submit.label ??=""
 	}
 	for (let [key, value] of Object.entries(schema)) {
-		value = (value && typeof value === "object" && ["value", "type"].some(r => Object.keys(value).includes(r))) ? value : { value };
+		value = (value && typeof value === "object" && ["value", "type", "options"].some(r => Object.keys(value).includes(r))) ? value : { value };
 		value.name ??= key
-		const base = typeof value.value === "object" ? "field-select" : "field-input";
+		const base = (!value.type || value.type == "select") && (typeof value.value === "object" || typeof value.options === "object") ? "field-select" : "field-input";
 		console.log({ base, value })
 		form.appendChild(createHTML({ base, args: value }))
 	}
@@ -129,6 +133,9 @@ function setupForm(_, { form }, schema) {
 	});
 	//form.appendChild(createHTML({base:"field-input",args:{type:"submit",value:"Submit"}}))
 	form.method = schema.submit?.panel ? "dialog" : "none"
+	if (form.method === "dialog") {
+		form.removeAttribute("onsubmit")
+	}
 
 }
 
@@ -164,4 +171,4 @@ export const createForm = (schema = {}, onSubmit) => {
 		console.warn("This param is deprecated now")
 	}
 	return createHTML({ base: "form", args: schema })
-y}
+}

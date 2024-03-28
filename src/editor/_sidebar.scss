@@ -1,5 +1,9 @@
 .sidebar {
     overflow: scroll;
+    display: flex;
+    justify-content: stretch;
+    align-items: stretch;
+    flex-flow: column;
     &.left {
         grid-area: left;
         // background-color: blue;
@@ -15,10 +19,9 @@
         max-width: unset;
         translate: unset;
         width: 300px;
-            .prompt-head {
-                button{
+
+            .panel-actions{
                     display: none;
-                }
             }
     }
 }

@@ -1,5 +1,6 @@
 "use strict";
 import { STB_EDITOR } from './editor/STB_EDITOR'
+import { storageHas } from './editor/storage.js';
 import "./editor/console";
 import { fn, oneTimeEventListener } from './editor/util'
 
@@ -38,6 +39,7 @@ import { createBinding } from "./editor/help.js";
 // const canvas = document.querySelector("canvas")
 // const app = createRenderer({ view: canvas, resizeTo: canvascontainer });
 // setupDragging(app);
+createMenuButton("🧬 Source", () => window.open("https://github.com/stb-gaming/stb-engine"))
 
 
 let panel = createPanel({
@@ -57,7 +59,7 @@ let panel = createPanel({
 		<a style="display:block;text-align:center"  href="https://github.com/stb-gaming/stb-engine/blob/master/notes/TODO.md" target="_blank">Whats next?</a>
 		`
 })
-createMenuButton("About", panel.open)
+createMenuButton("ℹ️ About", panel.open)
 
 Object.assign(STB_EDITOR, {
 	createFunction: fn,
@@ -73,7 +75,9 @@ Object.assign(STB_EDITOR, {
 
 globalThis.STB_EDITOR = STB_EDITOR;
 
-
+if (storageHas("game")) {
+	Object.assign(STB_EDITOR.game, JSON.parse(STB_EDITOR.storage.game))
+}
 
 
 // if(location.hostname==="localhost") {

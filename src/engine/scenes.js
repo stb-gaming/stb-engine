@@ -23,23 +23,23 @@ if (Object.hasOwn(globalThis, "STB_EDITOR")) {
 					`,)
 
 
-						const form = STB_EDITOR.createForm({
-					scene: {
-						value: "main",
-						type: "datalist",
-						options: []
-					},
-					submit:{
-						type:"hidden",
-						submit:({scene}) =>{
-							console.log("New Scene",scene)
-							changeScene(scene)
-						}
-					}
-				})
+	const form = STB_EDITOR.createForm({
+		scene: {
+			value: "main",
+			type: "datalist",
+			options: Object.keys(game.scenes || {})
+		},
+		submit: {
+			type: "hidden",
+			submit: ({ scene }) => {
+				console.log("New Scene", scene)
+				changeScene(scene)
+			}
+		}
+	})
 
-				
-				const datalist = form.querySelector("datalist")
+
+	const datalist = form.querySelector("datalist")
 
 	STB_EDITOR.createSystem({
 		id: "scenes",
@@ -47,40 +47,50 @@ if (Object.hasOwn(globalThis, "STB_EDITOR")) {
 		summary: "Scenes, Entities and Components",
 		panel: {
 			title: "Scene",
+			dock: "right",
 			fn: body => {
-			
+
 				body.appendChild(form)
 				console.log(form)
-			
+
 				body.appendChild(list)
-
-				onEvent("createScene",name=>{
-					datalist.appendChild(STB_EDITOR.createHTML({base:"field-option",args:{
-						value:name
-					}}))
-				})
-
-				onEvent("addComponent",(id,component)=>{
-					if(component === "name"){
-						let entityElement  = STB_EDITOR.createHTML({
-							base:"scroll-list-item",
-							args:{
-								title: names[id],
-								summary:`Entity ${id}`
-							},
-						})
-
-						list.appendChild(entityElement)
-					}
-				})
 			}
 		}
 	});
 
-	STB_EDITOR.createMenuButton("Create Entity",()=>{
-		let name;
-		while (!name || typeof name !== "string") name = prompt("Entity Name")
-		addComponent("name",null,name);
+
+
+	onEvent("createScene", name => {
+		createComponent("name")
+		console.log("scene", name)
+		datalist.appendChild(STB_EDITOR.createHTML({
+			base: "field-option", args: {
+				value: name
+			}
+		}))
+
+	})
+
+	onEvent("addComponent", (id, component, title) => {
+		if (component === "name") {
+			let entityElement = STB_EDITOR.createHTML({
+				base: "scroll-list-item",
+				args: {
+					title,
+					summary: `Entity ${id}`
+				},
+			})
+
+			list.appendChild(entityElement)
+		}
+	})
+
+	STB_EDITOR.createMenuButton("🫥 Create Entity", () => {
+		const name = prompt("Entity Name")
+		if (name && typeof name === "string") {
+			addComponent("name", null, name);
+
+		}
 	})
 }
 
@@ -97,10 +107,10 @@ export function changeScene(name) {
 			entities: {
 				removed: [],
 				get length() {
-					return Object.values(scene.components)?.[0]?.length || 0;
+					return Object.values(scenes[name].components)?.[0]?.length || 0;
 				},
 				set length(n) {
-					for (const component of Object.values(scene.components)) {
+					for (const component of Object.values(scenes[name].components)) {
 						component.length = n
 					}
 				}
@@ -180,9 +190,8 @@ export function addComponent(componentId, entityId = game.current?.entities.leng
 
 
 
-const names = createComponent("name")
-onEvent("addComponent",(entity,component,name)=>{
-	if(component==="name") {
-		names[entity] = name;
+onEvent("addComponent", (entity, component, name) => {
+	if (game.current || component === "name") {
+		game.current.components.name[entity] = name;
 	}
 })

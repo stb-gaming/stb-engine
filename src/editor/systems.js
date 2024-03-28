@@ -43,18 +43,19 @@ createHTML({
 		title: '.title',
 		summary: '.summary'
 	},
-	cb: (_, el, { title = "Sample System", summary = "This is a placeholder", img = "assets/img/ball.png", panel,click }) => {		console.warn("HELLO", panel)
+	cb: (_, el, { title = "Sample System", summary = "This is a placeholder", img = "assets/img/ball.png", panel, click }) => {
+		console.warn("HELLO", panel)
 		el.img.src = img;
 		el.title.innerText = title;
 		el.summary.innerText = summary;
 		if (panel) {
 			panel.title ??= title;
-			
+
 			el.tab.addEventListener("click", () => {
 				createPanel(panel)
 			})
 		}
-		if(click) {
+		if (click) {
 			el.tab.addEventListener("click", fn(click))
 		}
 	}
@@ -63,7 +64,7 @@ createHTML({
 
 
 
-createMenuButton("Systems", panel.open)
+createMenuButton("🛠️ Systems", panel.open)
 
 export function createSystem(system) {
 	if (Object.hasOwn(system, "id") && !Object.hasOwn(systems, system.id)) {

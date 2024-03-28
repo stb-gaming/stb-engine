@@ -2,6 +2,23 @@
 import { Sprite, Application } from 'pixi.js'
 let app;
 
+
+
+if (Object.hasOwn(globalThis, "STB_EDITOR")) {
+
+	STB_EDITOR.createSystem({
+		id: "renderer",
+		title: "Renderer",
+		summary: "PixiJS",
+		panel: {
+			title: "Scene",
+		}
+	});
+}
+
+
+
+
 export function createRenderer(options = { resizeTo: window }) {
     if (!app) {
         const isCanvasElement = options instanceof HTMLCanvasElement;

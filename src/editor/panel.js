@@ -1,3 +1,5 @@
+
+import { getStorage, storage, storageHas } from './storage.js';
 import { createHTML, spawnElement, makeElementDragable, setElementPosition } from './html.js';
 import { fn, whenever } from './util.js';
 import { createForm, getFormData } from './form';
@@ -34,8 +36,23 @@ function setupPanel(fragment, query, panel = {}) {
 	console.debug("Setup Panel", { fragment, query, panel })
 	query.title.innerText = panel.title ?? query.title.innerText
 
+
 	if (Object.hasOwn(panel, "pinnable") && !panel.pinnable) {
 		query.pin.remove();
+	} else {
+		query.pin.addEventListener("click", () => {
+			createPanel({
+				id: "dock",
+				title: "Which Side",
+				prompt: true,
+				form: {
+					side: { options: ["left", "right"] },
+					submit: ({ side }) => {
+						dockPrompt(panel, side)
+					}
+				}
+			})
+		})
 	}
 	if (Object.hasOwn(panel, "closeable") && !panel.closeable) {
 		query.close.remove();
@@ -87,7 +104,12 @@ function setupPanel(fragment, query, panel = {}) {
 
 function dockPrompt(prompt, side) {
 	const sidebar = document.querySelector("body>.sidebar." + side)
-	sidebar.appendChild(prompt);
+	STB_EDITOR.layout ??= {}
+
+	STB_EDITOR.layout[side] ??= [];
+	STB_EDITOR.layout[side].push(prompt.id);
+	prompt.open();
+	sidebar.appendChild(prompt.element);
 }
 
 export function createPanel(panel) {
@@ -103,6 +125,7 @@ export function createPanel(panel) {
 	} else if (Object.hasOwn(panel, "id") && !Object.hasOwn(panels, panel.id)) {
 		panels[panel.id] = panel;
 		console.debug("Registered new Panel")
+
 	}
 	if (typeof panel !== "object") return
 	panel.prompt ??= !!panel.form;
@@ -121,6 +144,12 @@ export function createPanel(panel) {
 				whenever(panel.onopen, 0)
 			}
 		}
+		panel.dock = side => {
+			dockPrompt(panel.element, side)
+		}
+
+
+
 		console.log(panel)
 		panel.close = () => {
 			panel.element.close()
@@ -134,13 +163,28 @@ export function createPanel(panel) {
 	}
 
 
+	// if (storageHas())
+	if (panel.side) {
+		panel.dock(panel.side)
+	}
+
+	if (Object.hasOwn(panel, "id") && storageHas("layout") && (!Object.hasOwn(panel, "pinnable") || panel.pinnable)) {
+		const layout = storage.layout;
+		if (layout.left?.has(panel.id)) {
+			panel.dock(left)
+		}
+		if (layout.right?.has(panel.id)) {
+			panel.dock(right)
+		}
+	}
+
 	return panel;
 }
 
 
 document.addEventListener("keydown", e => {
 	if (e.key === "Escape") {
-		let closeBtns = document.querySelectorAll("[open] .panel-close")
+		let closeBtns = document.querySelectorAll("body>[open] .panel-close")
 		if (closeBtns.length) closeBtns[closeBtns.length - 1].click()
 	}
 })

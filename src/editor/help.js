@@ -22,7 +22,7 @@ const panel = createPanel({
 	single: true,
 	pinnable: false,
 	dontopen: true,
-	html: `<table><tr><th>Action</th><th>Key</th></tr></table>`
+	html: `<table><tr><th>Action</th><th>Key</th></tr></table><p>More help and tutorials <a href="https://github.com/stb-gaming/stb-engine/wiki">here</a>.</p>`
 })
 const helpContent = panel.element.querySelector("table")
 document.addEventListener("keydown", e => {
@@ -31,5 +31,5 @@ document.addEventListener("keydown", e => {
 	}
 })
 
-createMenuButton("Help", panel.open)
+createMenuButton("📚 Help", panel.open)
 createBinding("Help", "Ctrl+/")
